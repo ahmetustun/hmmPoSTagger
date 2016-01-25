@@ -5,7 +5,5 @@ package core;
  */
 public class Const {
 
-    public static String boşluk_a = " ";
-    public static String ek_a = "_";
-    public static String tag_a = "/";
+
 }
