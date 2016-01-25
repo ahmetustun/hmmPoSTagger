@@ -21,10 +21,15 @@ public class Analyser {
     private HashMap<String, Integer> POS_tag_map;
     private HashMap<String, Integer> suffix_map;
 
-    private HashMap<String, Integer> start_count = new HashMap<String, Integer>();
-    private HashMap<String, Integer> POS_tag_count = new HashMap<String, Integer>();
+    private HashMap<String, Integer> start_count;
+    private HashMap<String, Integer> POS_tag_count;
+    private HashMap<String, Integer> obs_count;
 
     public Analyser(String corpus){
+
+        start_count = new HashMap<String, Integer>();
+        POS_tag_count = new HashMap<String, Integer>();
+        obs_count = new HashMap<String, Integer>();
 
         this.corpus = corpus;
         words = corpus.split(Parse_point.boşluk_a);
@@ -108,6 +113,10 @@ public class Analyser {
 
     }
 
+    public HashMap<String, Integer> getObs_count() {
+        return obs_count;
+    }
+
     public HashMap<String, HashMap<String, Integer>> count_transmission_pair() {
 
         HashMap<String, HashMap<String, Integer>> ctag_ptag_num = new HashMap<String, HashMap<String, Integer>>();
@@ -163,6 +172,14 @@ public class Analyser {
 
             String tag = word_tag_pair[1];
             String suffix = root_suffixes[root_suffixes.length-1];
+
+            if (obs_count.containsKey(suffix)){
+
+                int n = obs_count.get(suffix) + 1;
+                obs_count.put(suffix, n);
+            } else {
+                obs_count.put(suffix, 1);
+            }
 
             if (suffix_tag_num.containsKey(suffix)){
                 HashMap<String, Integer> tag_num = suffix_tag_num.get(suffix);

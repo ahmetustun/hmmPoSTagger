@@ -20,6 +20,7 @@ public class Test {
 
         HashMap<String, Integer> my_start_count = analyser.getStart_count();
         HashMap<String, Integer> my_POS_tag_count = analyser.getPOS_tag_count();
+        HashMap<String, Integer> my_obs_count = analyser.getObs_count();
 
         System.out.println("Tamamlandı");
 
