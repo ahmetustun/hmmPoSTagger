@@ -1,22 +1,26 @@
 package Constant;
 
+import java.util.ArrayList;
+
 /**
  * Created by ahmetu on 25.01.2016.
  */
 public class POS_Tags {
 
-    public String ADJ_s = "ADJ";
-    public String ADV_s = "ADV";
-    public String CONJ_s = "CONJ";
-    public String DET_s = "DET";
-    public String DUP_s = "DUP";
-    public String INTERJ_s = "INTERJ";
-    public String NOUN_s = "NOUN";
-    public String NUM_s = "NUM";
-    public String POSTP_s = "POSTP";
-    public String PRON_s = "PRON";
-    public String PUNC_s = "PUNC";
-    public String VERB_s = "VERB";
+    public static String ADJ_s = "ADJ";
+    public static String ADV_s = "ADV";
+    public static String CONJ_s = "CONJ";
+    public static String DET_s = "DET";
+    public static String DUP_s = "DUP";
+    public static String INTERJ_s = "INTERJ";
+    public static String NOUN_s = "NOUN";
+    public static String NUM_s = "NUM";
+    public static String POSTP_s = "POSTP";
+    public static String PRON_s = "PRON";
+    public static String PUNC_s = "PUNC";
+    public static String VERB_s = "VERB";
+
+    public static String[] tag_list = {ADJ_s, ADV_s, CONJ_s, DET_s, DUP_s, INTERJ_s, NOUN_s, NUM_s, POSTP_s, PRON_s, PUNC_s, VERB_s};
 
     public int START_i = 0;
     public int ADJ_i = 1;
