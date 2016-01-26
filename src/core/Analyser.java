@@ -1,10 +1,10 @@
 package core;
 
-import Constant.POS_Tags;
-import Constant.Parse_point;
+import utils.PartOfSpeech;
+import utils.Parse;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
@@ -12,138 +12,143 @@ import java.util.Iterator;
  */
 public class Analyser {
 
-    private String corpus;
-    String[] words;
+    private ArrayList<String> sentences;
 
-    private HashMap<String, Integer> start_count;
-    private HashMap<String, Integer> POS_tag_count;
-    private HashMap<String, Integer> obs_count;
-    private HashMap<String, HashMap<String, Integer>> ctag_ptag_num;
-    private HashMap<String, HashMap<String, Integer>> suffix_tag_num;
-    private HashMap<String, Float> start_probabilities;
-    private HashMap<String, HashMap<String, Float>> transmission_probabilities;
-    private HashMap<String, HashMap<String, Float>> emission_probabilities;
+    private HashMap<String, Integer> startCount;
+    private HashMap<String, Integer> tagCount;
+    private HashMap<String, Integer> suffixCount;
 
-    public Analyser(String corpus) {
+    private HashMap<String, HashMap<String, Integer>> transmissionPair;
+    private HashMap<String, HashMap<String, Integer>> emissionPair;
 
-        start_count = new HashMap<String, Integer>();
-        POS_tag_count = new HashMap<String, Integer>();
-        obs_count = new HashMap<String, Integer>();
-        ctag_ptag_num = new HashMap<String, HashMap<String, Integer>>();
-        suffix_tag_num = new HashMap<String, HashMap<String, Integer>>();
-        start_probabilities = new HashMap<String, Float>();
-        transmission_probabilities = new HashMap<String, HashMap<String, Float>>();
-        emission_probabilities = new HashMap<String, HashMap<String, Float>>();
+    private HashMap<String, Float> startProbabilities;
+    private HashMap<String, HashMap<String, Float>> transmissionProbabilities;
+    private HashMap<String, HashMap<String, Float>> emissionProbabilities;
 
-        this.corpus = corpus;
-        words = corpus.split(Parse_point.boşluk_a);
+    public Analyser(String fileName) {
+
+        sentences = new ArrayList<>();
+        startCount = new HashMap<String, Integer>();
+        tagCount = new HashMap<String, Integer>();
+        suffixCount = new HashMap<String, Integer>();
+        transmissionPair = new HashMap<String, HashMap<String, Integer>>();
+        emissionPair = new HashMap<String, HashMap<String, Integer>>();
+        startProbabilities = new HashMap<String, Float>();
+        transmissionProbabilities = new HashMap<String, HashMap<String, Float>>();
+        emissionProbabilities = new HashMap<String, HashMap<String, Float>>();
+
+        Parse.parseTrainFile(fileName, sentences);
 
     }
 
-    public HashMap<String, Integer> getStart_count() {
-        return start_count;
+    public HashMap<String, Integer> getStartCount() {
+        return startCount;
     }
 
-    public HashMap<String, Integer> getPOS_tag_count() {
-        return POS_tag_count;
+    public HashMap<String, Integer> getTagCount() {
+        return tagCount;
     }
 
-    public HashMap<String, HashMap<String, Integer>> getCtag_ptag_num() {
-        return ctag_ptag_num;
+    public HashMap<String, HashMap<String, Integer>> getTransmissionPair() {
+        return transmissionPair;
     }
 
-    public HashMap<String, HashMap<String, Integer>> getSuffix_tag_num() {
-        return suffix_tag_num;
+    public HashMap<String, HashMap<String, Integer>> getEmissionPair() {
+        return emissionPair;
     }
 
-    public HashMap<String, Float> getStart_probabilities() {
-        return start_probabilities;
+    public HashMap<String, Float> getStartProbabilities() {
+        return startProbabilities;
     }
 
-    public HashMap<String, HashMap<String, Float>> getTransmission_probabilities() {
-        return transmission_probabilities;
+    public HashMap<String, HashMap<String, Float>> getTransmissionProbabilities() {
+        return transmissionProbabilities;
     }
 
-    public HashMap<String, HashMap<String, Float>> getEmission_probabilities() {
-        return emission_probabilities;
+    public HashMap<String, HashMap<String, Float>> getEmissionProbabilities() {
+        return emissionProbabilities;
     }
 
-    public HashMap<String, Integer> getObs_count() {
-        return obs_count;
+    public HashMap<String, Integer> getSuffixCount() {
+        return suffixCount;
     }
 
-    public void count_transmission_pair() {
+    public void countTransmissionPair(String sentence) {
+
+        String[] words = sentence.split(Parse.boşluk_a);
 
         String prev = "START";
         for (String s : words) {
-            String[] word_tag_pair = s.split(Parse_point.tag_a);
+            String[] word_tag_pair = s.split(Parse.tag_a);
             String tag = word_tag_pair[1];
 
-            if (POS_tag_count.containsKey(tag)) {
+            if (tagCount.containsKey(tag)) {
 
-                int n = POS_tag_count.get(tag) + 1;
-                POS_tag_count.put(tag, n);
+                int n = tagCount.get(tag) + 1;
+                tagCount.put(tag, n);
             } else {
-                POS_tag_count.put(tag, 1);
+                tagCount.put(tag, 1);
             }
 
             if (prev.equals("START")) {
-                if (start_count.containsKey(tag)) {
-                    int n = start_count.get(tag) + 1;
-                    start_count.put(tag, n);
+                if (startCount.containsKey(tag)) {
+                    int n = startCount.get(tag) + 1;
+                    startCount.put(tag, n);
                 } else {
-                    start_count.put(tag, 1);
+                    startCount.put(tag, 1);
                 }
             } else {
-                if (ctag_ptag_num.containsKey(prev)) {
-                    HashMap<String, Integer> tag_num = ctag_ptag_num.get(prev);
+                if (transmissionPair.containsKey(prev)) {
+                    HashMap<String, Integer> tag_num = transmissionPair.get(prev);
                     if (tag_num.containsKey(tag)) {
                         int n = tag_num.get(tag) + 1;
                         tag_num.put(tag, n);
                     } else {
                         tag_num.put(tag, 1);
                     }
-                    ctag_ptag_num.put(prev, tag_num);
+                    transmissionPair.put(prev, tag_num);
                 } else {
                     HashMap<String, Integer> tag_num = new HashMap<String, Integer>();
                     tag_num.put(tag, 1);
-                    ctag_ptag_num.put(prev, tag_num);
+                    transmissionPair.put(prev, tag_num);
                 }
             }
             prev = tag;
         }
     }
 
-    public void count_emission_pair() {
+    public void countEmissionPair(String sentence) {
+
+        String[] words = sentence.split(Parse.boşluk_a);
 
         for (String s : words) {
-            String[] word_tag_pair = s.split(Parse_point.tag_a);
-            String[] root_suffixes = word_tag_pair[0].split(Parse_point.ek_a);
+            String[] word_tag_pair = s.split(Parse.tag_a);
+            String[] root_suffixes = word_tag_pair[0].split(Parse.ek_a);
 
             String tag = word_tag_pair[1];
             String suffix = root_suffixes[root_suffixes.length - 1];
 
-            if (obs_count.containsKey(suffix)) {
+            if (suffixCount.containsKey(suffix)) {
 
-                int n = obs_count.get(suffix) + 1;
-                obs_count.put(suffix, n);
+                int n = suffixCount.get(suffix) + 1;
+                suffixCount.put(suffix, n);
             } else {
-                obs_count.put(suffix, 1);
+                suffixCount.put(suffix, 1);
             }
 
-            if (suffix_tag_num.containsKey(tag)) {
-                HashMap<String, Integer> tag_num = suffix_tag_num.get(tag);
+            if (emissionPair.containsKey(tag)) {
+                HashMap<String, Integer> tag_num = emissionPair.get(tag);
                 if (tag_num.containsKey(suffix)) {
                     int n = tag_num.get(suffix) + 1;
                     tag_num.put(suffix, n);
                 } else {
                     tag_num.put(suffix, 1);
                 }
-                suffix_tag_num.put(tag, tag_num);
+                emissionPair.put(tag, tag_num);
             } else {
                 HashMap<String, Integer> tag_num = new HashMap<String, Integer>();
                 tag_num.put(suffix, 1);
-                suffix_tag_num.put(tag, tag_num);
+                emissionPair.put(tag, tag_num);
             }
         }
     }
@@ -151,69 +156,89 @@ public class Analyser {
     public void calculateStartProbabilities() {
 
         int totalStartPoint = 0;
-        Iterator it = start_count.values().iterator();
+        Iterator it = startCount.values().iterator();
         while (it.hasNext()){
             totalStartPoint = totalStartPoint + (Integer) it.next();
         }
 
-        for (String s : POS_Tags.tag_list){
-            if (start_count.containsKey(s)){
-                start_probabilities.put(s, ((float)start_count.get(s)/totalStartPoint));
+        for (String s : PartOfSpeech.tag_list){
+            if (startCount.containsKey(s)){
+                startProbabilities.put(s, ((float) startCount.get(s)/totalStartPoint));
             } else {
-                start_probabilities.put(s, 0f);
+                startProbabilities.put(s, 0f);
             }
         }
     }
 
-    public void calculate_transmission_probability() {
+    public void calculateTransmissionProbability() {
 
-        for (String s : POS_Tags.tag_list){
-            if (ctag_ptag_num.containsKey(s)){
-                HashMap<String, Integer> transmitteds = ctag_ptag_num.get(s);
+        for (String s : PartOfSpeech.tag_list){
+            if (transmissionPair.containsKey(s)){
+                HashMap<String, Integer> transmitteds = transmissionPair.get(s);
                 HashMap<String, Float> t_prob = new HashMap<String, Float>();
-                for (String t : POS_Tags.tag_list){
+                for (String t : PartOfSpeech.tag_list){
                     if (transmitteds.containsKey(t)){
-                        t_prob.put(t, (float)transmitteds.get(t)/POS_tag_count.get(s));
+                        t_prob.put(t, (float)transmitteds.get(t)/ tagCount.get(s));
                     } else {
                         t_prob.put(t, 0f);
                     }
-                    transmission_probabilities.put(s, t_prob);
+                    transmissionProbabilities.put(s, t_prob);
                 }
             } else {
                 HashMap<String, Float> t_prob = new HashMap<String, Float>();
-                for (String t : POS_Tags.tag_list){
+                for (String t : PartOfSpeech.tag_list){
                     t_prob.put(t, 0f);
                 }
-                transmission_probabilities.put(s, t_prob);
+                transmissionProbabilities.put(s, t_prob);
             }
         }
     }
 
-    public void calculate_emission_probabilities() {
+    public void calculateEmissionProbabilities() {
 
-        for (String s : POS_Tags.tag_list){
-            if (suffix_tag_num.containsKey(s)){
-                HashMap<String, Integer> emitteds = suffix_tag_num.get(s);
+        for (String s : PartOfSpeech.tag_list){
+            if (emissionPair.containsKey(s)){
+                HashMap<String, Integer> emitteds = emissionPair.get(s);
                 HashMap<String, Float> t_prob = new HashMap<String, Float>();
-                Iterator it = obs_count.keySet().iterator();
+                Iterator it = suffixCount.keySet().iterator();
                 while (it.hasNext()){
                     String obs = (String)it.next();
                     if (emitteds.containsKey(obs)){
-                        t_prob.put(obs, (float)emitteds.get(obs)/POS_tag_count.get(s));
+                        t_prob.put(obs, (float)emitteds.get(obs)/ tagCount.get(s));
                     } else {
                         t_prob.put(obs, 0f);
                     }
-                    emission_probabilities.put(s, t_prob);
+                    emissionProbabilities.put(s, t_prob);
                 }
             } else {
                 HashMap<String, Float> t_prob = new HashMap<String, Float>();
-                Iterator it = obs_count.keySet().iterator();
+                Iterator it = suffixCount.keySet().iterator();
                 while (it.hasNext()){
                     String obs = (String)it.next();
                     t_prob.put(obs, 0f);
-                    emission_probabilities.put(s, t_prob);
+                    emissionProbabilities.put(s, t_prob);
                 }
             }
         }
+    }
+
+    public void tagger(){
+
+        for (String sentence : sentences){
+            countEmissionPair(sentence);
+            countTransmissionPair(sentence);
+        }
+
+        calculateStartProbabilities();
+        calculateTransmissionProbability();
+        calculateTransmissionProbability();
+
+        String[] obs_list = (String[])suffixCount.keySet().toArray();
+
+        Object[] ret = Viterbi.forward_viterbi(obs_list, PartOfSpeech.tag_list, startProbabilities, transmissionProbabilities, emissionProbabilities);
+
+        System.out.println(((Float) ret[0]).floatValue());
+        System.out.println((String) ret[1]);
+        System.out.println(((Float) ret[2]).floatValue());
     }
 }

@@ -1,11 +1,9 @@
-package Constant;
-
-import java.util.ArrayList;
+package utils;
 
 /**
  * Created by ahmetu on 25.01.2016.
  */
-public class POS_Tags {
+public class PartOfSpeech {
 
     public static String ADJ_s = "ADJ";
     public static String ADV_s = "ADV";

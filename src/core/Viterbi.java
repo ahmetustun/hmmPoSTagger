@@ -3,6 +3,7 @@ package core;
 /**
  * Created by ahmet on 22/01/16.
  */
+import java.util.HashMap;
 import java.util.Hashtable;
 
 public class Viterbi
@@ -14,6 +15,7 @@ public class Viterbi
     static final String COLD = "cold";
     static final String NORMAL = "normal";
 
+    /*
     public static void main(String[] args)
     {
         String[] states = new String[] {HEALTHY, FEVER};
@@ -59,11 +61,12 @@ public class Viterbi
         System.out.println((String) ret[1]);
         System.out.println(((Float) ret[2]).floatValue());
     }
+    */
 
     public static Object[] forward_viterbi(String[] obs, String[] states,
-                                           Hashtable<String, Float> start_p,
-                                           Hashtable<String, Hashtable<String, Float>> trans_p,
-                                           Hashtable<String, Hashtable<String, Float>> emit_p)
+                                           HashMap<String, Float> start_p,
+                                           HashMap<String, HashMap<String, Float>> trans_p,
+                                           HashMap<String, HashMap<String, Float>> emit_p)
     {
         Hashtable<String, Object[]> T = new Hashtable<String, Object[]>();
         for (String state : states)
