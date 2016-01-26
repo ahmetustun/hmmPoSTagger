@@ -41,6 +41,20 @@ public class Analyser {
 
     }
 
+    public Analyser() {
+
+        sentences = new ArrayList<>();
+        startCount = new HashMap<String, Integer>();
+        tagCount = new HashMap<String, Integer>();
+        suffixCount = new HashMap<String, Integer>();
+        transmissionPair = new HashMap<String, HashMap<String, Integer>>();
+        emissionPair = new HashMap<String, HashMap<String, Integer>>();
+        startProbabilities = new HashMap<String, Float>();
+        transmissionProbabilities = new HashMap<String, HashMap<String, Float>>();
+        emissionProbabilities = new HashMap<String, HashMap<String, Float>>();
+
+    }
+
     public HashMap<String, Integer> getStartCount() {
         return startCount;
     }

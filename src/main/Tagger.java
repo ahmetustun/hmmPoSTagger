@@ -43,7 +43,7 @@ public class Tagger {
                 }
             }
 
-            String[] obs_list = (String[])suffixCount.keySet().toArray();
+            String[] obs_list = suffixCount.keySet().toArray(new String[0]);
 
             Object[] ret = Viterbi.forward_viterbi(obs_list, PartOfSpeech.tag_list,
                     analyser.getStartProbabilities(), analyser.getTransmissionProbabilities(), analyser.getEmissionProbabilities());
