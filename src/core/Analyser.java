@@ -222,7 +222,7 @@ public class Analyser {
         }
     }
 
-    public void tagger(){
+    public void analyse(){
 
         for (String sentence : sentences){
             countEmissionPair(sentence);
@@ -233,12 +233,5 @@ public class Analyser {
         calculateTransmissionProbability();
         calculateTransmissionProbability();
 
-        String[] obs_list = (String[])suffixCount.keySet().toArray();
-
-        Object[] ret = Viterbi.forward_viterbi(obs_list, PartOfSpeech.tag_list, startProbabilities, transmissionProbabilities, emissionProbabilities);
-
-        System.out.println(((Float) ret[0]).floatValue());
-        System.out.println((String) ret[1]);
-        System.out.println(((Float) ret[2]).floatValue());
     }
 }

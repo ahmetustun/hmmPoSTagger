@@ -8,6 +8,7 @@ import java.util.Hashtable;
 
 public class Viterbi
 {
+    /*
     static final String HEALTHY = "Healthy";
     static final String FEVER = "Fever";
 
@@ -15,7 +16,7 @@ public class Viterbi
     static final String COLD = "cold";
     static final String NORMAL = "normal";
 
-    /*
+
     public static void main(String[] args)
     {
         String[] states = new String[] {HEALTHY, FEVER};
