@@ -29,6 +29,9 @@ public class Trainer {
         Parse.parseTrainFile(fileName, sentences);
     }
 
+    public Trainer() {
+    }
+
     public HashMap<String, Integer> getStartCountMap() {
         return startCountMap;
     }

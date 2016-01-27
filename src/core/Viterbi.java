@@ -3,6 +3,7 @@ package core;
 /**
  * Created by ahmet on 22/01/16.
  */
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -53,22 +54,22 @@ public class Viterbi
         emission_probability.put(HEALTHY, e1);
         emission_probability.put(FEVER, e2);
 
-        Object[] ret = forward_viterbi(observations,
+        String[] ret = forward_viterbi(observations,
                 states,
                 start_probability,
                 transition_probability,
                 emission_probability);
-        System.out.println(((Float) ret[0]).floatValue());
-        System.out.println((String) ret[1]);
-        System.out.println(((Float) ret[2]).floatValue());
+        for (String s : ret){
+            System.out.print(s + " ");
+        }
     }
 
 
-    public static Object[] forward_viterbi(String[] obs, String[] states,
-                                           HashMap<String, Float> start_p,
-                                           HashMap<String, HashMap<String, Float>> trans_p,
-                                           HashMap<String, HashMap<String, Float>> emit_p)
-    {
+    public static String[] forward_viterbi(String[] obs, String[] states,
+                                                    HashMap<String, Float> start_p,
+                                                    HashMap<String, HashMap<String, Float>> trans_p,
+                                                    HashMap<String, HashMap<String, Float>> emit_p) {
+        ArrayList<String> statesList = new ArrayList<>();
         Hashtable<String, Object[]> T = new Hashtable<String, Object[]>();
         for (String state : states)
             T.put(state, new Object[] {start_p.get(state), state, start_p.get(state)});
@@ -130,6 +131,9 @@ public class Viterbi
                 valmax = v_prob;
             }
         }
-        return new Object[]{total, argmax, valmax};
+
+        String[] sList = argmax.split(",");
+        sList[sList.length-1] = "\0";
+        return sList;
     }
 }
