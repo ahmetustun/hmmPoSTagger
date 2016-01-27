@@ -1,6 +1,6 @@
 package test;
 
-import core.Analyser;
+import core.Trainer;
 import core.Viterbi;
 import utils.Parse;
 import utils.PartOfSpeech;
@@ -17,22 +17,22 @@ public class Test {
         String corpus = "Ahmet_∅/NOUN ev_e/NOUN gel_di/VERB";
         String untagged = "gel_di/VERB Ahmet_∅/NOUN ev_e/NOUN";
 
-        Analyser analyser = new Analyser();
+        Trainer trainer = new Trainer();
 
-        analyser.countTransmissionPair(corpus);
-        analyser.countEmissionPair(corpus);
-        analyser.calculateStartProbabilities();
-        analyser.calculateTransmissionProbability();
-        analyser.calculateEmissionProbabilities();
+        trainer.countTransmissionPair(corpus);
+        trainer.countEmissionPair(corpus);
+        trainer.calculateStartProbabilities();
+        trainer.calculateTransmissionProbability();
+        trainer.calculateEmissionProbabilities();
 
-        HashMap<String, Integer> my_start_count = analyser.getStartCount();
-        HashMap<String, Integer> my_POS_tag_count = analyser.getTagCount();
-        HashMap<String, Integer> my_obs_count = analyser.getSuffixCount();
-        HashMap<String, HashMap<String, Integer>> my_transmission_pair_count = analyser.getTransmissionPair();
-        HashMap<String, HashMap<String, Integer>> my_emission_pair_count = analyser.getEmissionPair();
-        HashMap<String, Float> my_start_prob = analyser.getStartProbabilities();
-        HashMap<String, HashMap<String, Float>> my_transmission_prob = analyser.getTransmissionProbabilities();
-        HashMap<String, HashMap<String, Float>> my_emission_prob = analyser.getEmissionProbabilities();
+        HashMap<String, Integer> my_start_count = trainer.getStartCountMap();
+        HashMap<String, Integer> my_POS_tag_count = trainer.getTagCountMap();
+        HashMap<String, Integer> my_obs_count = trainer.getSuffixCountMap();
+        HashMap<String, HashMap<String, Integer>> my_transmission_pair_count = trainer.getTransmissionPairMap();
+        HashMap<String, HashMap<String, Integer>> my_emission_pair_count = trainer.getEmissionPairMap();
+        HashMap<String, Float> my_start_prob = trainer.getStartProbabilitiesMap();
+        HashMap<String, HashMap<String, Float>> my_transmission_prob = trainer.getTransmissionProbabilitiesMap();
+        HashMap<String, HashMap<String, Float>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
 
         String[] words = untagged.split(Parse.boşluk_a);
         HashMap<String, Integer> suffixCount = new HashMap<>();
@@ -56,7 +56,7 @@ public class Test {
         String[] obs_list = suffixCount.keySet().toArray(new String[0]);
 
         Object[] ret = Viterbi.forward_viterbi(obs_list, PartOfSpeech.tag_list,
-                analyser.getStartProbabilities(), analyser.getTransmissionProbabilities(), analyser.getEmissionProbabilities());
+                trainer.getStartProbabilitiesMap(), trainer.getTransmissionProbabilitiesMap(), trainer.getEmissionProbabilitiesMap());
 
         System.out.println(((Float) ret[0]).floatValue());
         System.out.println((String) ret[1]);

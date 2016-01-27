@@ -8,7 +8,7 @@ import java.util.Hashtable;
 
 public class Viterbi
 {
-    /*
+
     static final String HEALTHY = "Healthy";
     static final String FEVER = "Fever";
 
@@ -21,32 +21,32 @@ public class Viterbi
     {
         String[] states = new String[] {HEALTHY, FEVER};
 
-        String[] observations = new String[] {DIZZY, COLD, NORMAL};
+        String[] observations = new String[] {NORMAL, COLD, DIZZY};
 
-        Hashtable<String, Float> start_probability = new Hashtable<String, Float>();
+        HashMap<String, Float> start_probability = new HashMap<String, Float>();
         start_probability.put(HEALTHY, 0.6f);
         start_probability.put(FEVER, 0.4f);
 
         // transition_probability
-        Hashtable<String, Hashtable<String, Float>> transition_probability =
-                new Hashtable<String, Hashtable<String, Float>>();
-        Hashtable<String, Float> t1 = new Hashtable<String, Float>();
+        HashMap<String, HashMap<String, Float>> transition_probability =
+                new HashMap<String, HashMap<String, Float>>();
+        HashMap<String, Float> t1 = new HashMap<String, Float>();
         t1.put(HEALTHY, 0.7f);
         t1.put(FEVER, 0.3f);
-        Hashtable<String, Float> t2 = new Hashtable<String, Float>();
+        HashMap<String, Float> t2 = new HashMap<String, Float>();
         t2.put(HEALTHY, 0.4f);
         t2.put(FEVER, 0.6f);
         transition_probability.put(HEALTHY, t1);
         transition_probability.put(FEVER, t2);
 
         // emission_probability
-        Hashtable<String, Hashtable<String, Float>> emission_probability =
-                new Hashtable<String, Hashtable<String, Float>>();
-        Hashtable<String, Float> e1 = new Hashtable<String, Float>();
+        HashMap<String, HashMap<String, Float>> emission_probability =
+                new HashMap<String, HashMap<String, Float>>();
+        HashMap<String, Float> e1 = new HashMap<String, Float>();
         e1.put(DIZZY, 0.1f);
         e1.put(COLD, 0.4f);
         e1.put(NORMAL, 0.5f);
-        Hashtable<String, Float> e2 = new Hashtable<String, Float>();
+        HashMap<String, Float> e2 = new HashMap<String, Float>();
         e2.put(DIZZY, 0.6f);
         e2.put(COLD, 0.3f);
         e2.put(NORMAL, 0.1f);
@@ -62,7 +62,7 @@ public class Viterbi
         System.out.println((String) ret[1]);
         System.out.println(((Float) ret[2]).floatValue());
     }
-    */
+
 
     public static Object[] forward_viterbi(String[] obs, String[] states,
                                            HashMap<String, Float> start_p,
