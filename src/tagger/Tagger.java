@@ -1,10 +1,9 @@
-package test;
+package tagger;
 
 import core.Scorer;
 import core.Smoother;
 import core.Trainer;
 import core.Viterbi;
-import utils.Parse;
 import utils.PartOfSpeech;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.HashMap;
 /**
  * Created by ahmet on 21/01/16.
  */
-public class Test {
+public class Tagger {
 
     public static void main(String[] args) {
 
