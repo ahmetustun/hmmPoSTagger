@@ -14,6 +14,7 @@ public class Smoother {
 
     //unt : untagged
     private ArrayList<String> unt_sentences = new ArrayList<>();
+    private ArrayList<ArrayList<String>> unTaggedSuffixesList = new ArrayList<>();
 
     // uns : unsmoothed
     private HashMap<String, Integer> uns_startCountMap;
@@ -27,7 +28,7 @@ public class Smoother {
     private HashMap<String, HashMap<String, Integer>> s_emissionPairMap = new HashMap<>();
     private HashMap<String, HashMap<String, Float>> s_emissionProbabilitiesMap = new HashMap<>();
 
-    ArrayList<String> unseenSuffixList = new ArrayList<>();
+    private ArrayList<String> unseenSuffixList = new ArrayList<>();
 
     public Smoother(HashMap<String, Integer> uns_startCountMap, HashMap<String, Integer> uns_tagCountMap, HashMap<String, Integer> uns_suffixCountMap,
                     HashMap<String, HashMap<String, Integer>> uns_transmissionPairMap, HashMap<String, HashMap<String, Integer>> uns_emissionPairMap){
@@ -55,22 +56,49 @@ public class Smoother {
     public void countUnseenSuffixes(String unt_sentence) {
 
         String[] words = unt_sentence.split(Parse.boşluk_a);
+        ArrayList<String> sList = new ArrayList<>();
 
         for (String s : words) {
 
-            String[] root_suffixes = s.split(Parse.ek_a);
+            String[] word_tag_pair = s.split(Parse.tag_a);
+            String[] root_suffixes = word_tag_pair[0].split(Parse.ek_a);
+
+            String tag = word_tag_pair[1];
             String suffix = root_suffixes[root_suffixes.length - 1];
 
-            if (uns_suffixCountMap.containsKey(suffix)) {
+            sList.add(suffix);
+
+            if (!uns_suffixCountMap.containsKey(suffix)) {
                 unseenSuffixList.add(suffix);
             }
         }
+        unTaggedSuffixesList.add(sList);
     }
 
     public void countUnseenSuffixesForTestCorpus(){
         for (String sentence : unt_sentences){
             countUnseenSuffixes(sentence);
         }
+    }
+
+    public ArrayList<ArrayList<String>> getUnTaggedSuffixesList() {
+        return unTaggedSuffixesList;
+    }
+
+    public ArrayList<String> getUnseenSuffixList() {
+        return unseenSuffixList;
+    }
+
+    public HashMap<String, HashMap<String, Float>> getS_emissionProbabilitiesMap() {
+        return s_emissionProbabilitiesMap;
+    }
+
+    public HashMap<String, HashMap<String, Integer>> getS_emissionPairMap() {
+        return s_emissionPairMap;
+    }
+
+    public HashMap<String, Integer> getS_suffixCountMap() {
+        return s_suffixCountMap;
     }
 
     public void addOneForEmission(){
@@ -103,6 +131,7 @@ public class Smoother {
                     s_emissionPairMap.put(s, t_prob);
                 }
             }
+
         }
     }
 
@@ -111,14 +140,21 @@ public class Smoother {
         int suffixCount = s_suffixCountMap.size();
 
         for (String tag : PartOfSpeech.tag_list){
-            Iterator s_it = s_emissionPairMap.get(tag).keySet().iterator();
+            HashMap<String, Integer> emitteds = s_emissionPairMap.get(tag);
+            HashMap<String, Float> e_prob = new HashMap<String, Float>();
+            Iterator s_it = s_suffixCountMap.keySet().iterator();
             while (s_it.hasNext()){
                 String suffix = (String)s_it.next();
-                HashMap<String, Float> e_prob = new HashMap<String, Float>();
-                e_prob.put(suffix, (float) s_suffixCountMap.get(suffix)/(uns_tagCountMap.get(tag) + suffixCount));
+                e_prob.put(suffix, (float) emitteds.get(suffix)/(uns_tagCountMap.get(tag) + suffixCount));
                 s_emissionProbabilitiesMap.put(tag, e_prob);
             }
         }
+    }
+
+    public void addOne(){
+        countUnseenSuffixesForTestCorpus();
+        addOneForEmission();
+        calculateEmissionProbabilities();
     }
 
 }

@@ -12,10 +12,11 @@ import java.util.Iterator;
  */
 public class Trainer {
 
-    private ArrayList<String> sentences = new ArrayList<>();;
+    private ArrayList<String> sentences = new ArrayList<>();
 
     private HashMap<String, Integer> startCountMap = new HashMap<>();
     private HashMap<String, Integer> tagCountMap = new HashMap<>();
+
     private HashMap<String, Integer> suffixCountMap = new HashMap<>();
 
     private HashMap<String, HashMap<String, Integer>> transmissionPairMap = new HashMap<>();
@@ -26,10 +27,16 @@ public class Trainer {
     private HashMap<String, HashMap<String, Float>> emissionProbabilitiesMap = new HashMap<>();
 
     public Trainer(String fileName) {
+        for (String s : PartOfSpeech.tag_list){
+            tagCountMap.put(s, 0);
+        }
         Parse.parseTrainFile(fileName, sentences);
     }
 
     public Trainer() {
+        for (String s : PartOfSpeech.tag_list){
+            tagCountMap.put(s, 0);
+        }
     }
 
     public HashMap<String, Integer> getStartCountMap() {
@@ -221,7 +228,7 @@ public class Trainer {
         }
 
         calculateStartProbabilities();
-        calculateTransmissionProbability();
+        calculateEmissionProbabilities();
         calculateTransmissionProbability();
 
     }

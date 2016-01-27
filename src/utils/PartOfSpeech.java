@@ -5,18 +5,18 @@ package utils;
  */
 public class PartOfSpeech {
 
-    public static String ADJ_s = "ADJ";
-    public static String ADV_s = "ADV";
-    public static String CONJ_s = "CONJ";
-    public static String DET_s = "DET";
-    public static String DUP_s = "DUP";
-    public static String INTERJ_s = "INTERJ";
-    public static String NOUN_s = "NOUN";
-    public static String NUM_s = "NUM";
-    public static String POSTP_s = "POSTP";
-    public static String PRON_s = "PRON";
-    public static String PUNC_s = "PUNC";
-    public static String VERB_s = "VERB";
+    public static String ADJ_s = "Adj";
+    public static String ADV_s = "Adv";
+    public static String CONJ_s = "Conj";
+    public static String DET_s = "Det";
+    public static String DUP_s = "Dup";
+    public static String INTERJ_s = "Interj";
+    public static String NOUN_s = "Noun";
+    public static String NUM_s = "Num";
+    public static String POSTP_s = "Postp";
+    public static String PRON_s = "Pron";
+    public static String PUNC_s = "Punc";
+    public static String VERB_s = "Verb";
 
     public static String[] tag_list = {ADJ_s, ADV_s, CONJ_s, DET_s, DUP_s, INTERJ_s, NOUN_s, NUM_s, POSTP_s, PRON_s, PUNC_s, VERB_s};
 

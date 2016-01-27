@@ -4,6 +4,7 @@ package core;
  * Created by ahmet on 22/01/16.
  */
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -54,7 +55,7 @@ public class Viterbi
         emission_probability.put(HEALTHY, e1);
         emission_probability.put(FEVER, e2);
 
-        String[] ret = forward_viterbi(observations,
+        ArrayList<String> ret = forward_viterbi(observations,
                 states,
                 start_probability,
                 transition_probability,
@@ -65,7 +66,7 @@ public class Viterbi
     }
 
 
-    public static String[] forward_viterbi(String[] obs, String[] states,
+    public static ArrayList<String> forward_viterbi(String[] obs, String[] states,
                                                     HashMap<String, Float> start_p,
                                                     HashMap<String, HashMap<String, Float>> trans_p,
                                                     HashMap<String, HashMap<String, Float>> emit_p) {
@@ -133,7 +134,9 @@ public class Viterbi
         }
 
         String[] sList = argmax.split(",");
-        sList[sList.length-1] = "\0";
-        return sList;
+        for (int i=0; i<sList.length-1; i++){
+            statesList.add(sList[i]);
+        }
+        return statesList;
     }
 }

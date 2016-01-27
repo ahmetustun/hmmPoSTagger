@@ -1,10 +1,13 @@
 package test;
 
+import core.Scorer;
+import core.Smoother;
 import core.Trainer;
 import core.Viterbi;
 import utils.Parse;
 import utils.PartOfSpeech;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,16 +17,8 @@ public class Test {
 
     public static void main(String[] args) {
 
-        String corpus = "Ahmet_∅/NOUN ev_e/NOUN gel_di/VERB";
-        String untagged = "gel_di/VERB Ahmet_∅/NOUN ev_e/NOUN";
-
-        Trainer trainer = new Trainer();
-
-        trainer.countTransmissionPair(corpus);
-        trainer.countEmissionPair(corpus);
-        trainer.calculateStartProbabilities();
-        trainer.calculateTransmissionProbability();
-        trainer.calculateEmissionProbabilities();
+        Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/train_set.txt");
+        trainer.analyse();
 
         HashMap<String, Integer> my_start_count = trainer.getStartCountMap();
         HashMap<String, Integer> my_POS_tag_count = trainer.getTagCountMap();
@@ -34,34 +29,29 @@ public class Test {
         HashMap<String, HashMap<String, Float>> my_transmission_prob = trainer.getTransmissionProbabilitiesMap();
         HashMap<String, HashMap<String, Float>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
 
-        String[] words = untagged.split(Parse.boşluk_a);
-        HashMap<String, Integer> suffixCount = new HashMap<>();
+        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/test_set.txt",
+                my_start_count, my_POS_tag_count, my_obs_count,
+                my_transmission_pair_count, my_emission_pair_count);
 
-        for (String s : words) {
-            String[] word_tag_pair = s.split(Parse.tag_a);
-            String[] root_suffixes = word_tag_pair[0].split(Parse.ek_a);
+        smoother.addOne();
 
-            String tag = word_tag_pair[1];
-            String suffix = root_suffixes[root_suffixes.length - 1];
+        ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
+        HashMap<String, Integer> my_suffix_count_map = smoother.getS_suffixCountMap();
+        HashMap<String, HashMap<String, Integer>> my_s_emission_pair_count = smoother.getS_emissionPairMap();
+        HashMap<String, HashMap<String, Float>> my_s_emission_prob = smoother.getS_emissionProbabilitiesMap();
+        ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
+        ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
 
-            if (suffixCount.containsKey(suffix)) {
-
-                int n = suffixCount.get(suffix) + 1;
-                suffixCount.put(suffix, n);
-            } else {
-                suffixCount.put(suffix, 1);
-            }
+        for (ArrayList<String> a : my_unt_sentences_suffixes){
+            String[] obs = a.toArray(new String[0]);
+            ArrayList<String> generatedTags = Viterbi.forward_viterbi(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_emission_prob);
+            generated_sentences_Tags.add(generatedTags);
         }
 
-        String[] obs_list = suffixCount.keySet().toArray(new String[0]);
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/tagged_test_set.txt", generated_sentences_Tags);
+        float my_score = scorer.getScore();
 
-        Object[] ret = Viterbi.forward_viterbi(obs_list, PartOfSpeech.tag_list,
-                trainer.getStartProbabilitiesMap(), trainer.getTransmissionProbabilitiesMap(), trainer.getEmissionProbabilitiesMap());
-
-        System.out.println(((Float) ret[0]).floatValue());
-        System.out.println((String) ret[1]);
-        System.out.println(((Float) ret[2]).floatValue());
-
+        System.out.println("\n" + my_score);
         System.out.println("Tamamlandı");
 
     }
