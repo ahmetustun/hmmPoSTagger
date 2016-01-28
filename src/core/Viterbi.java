@@ -11,62 +11,7 @@ import java.util.Hashtable;
 public class Viterbi
 {
 
-    static final String HEALTHY = "Healthy";
-    static final String FEVER = "Fever";
-
-    static final String DIZZY = "dizzy";
-    static final String COLD = "cold";
-    static final String NORMAL = "normal";
-
-
-    public static void main(String[] args)
-    {
-        String[] states = new String[] {HEALTHY, FEVER};
-
-        String[] observations = new String[] {NORMAL, COLD, DIZZY};
-
-        HashMap<String, Float> start_probability = new HashMap<String, Float>();
-        start_probability.put(HEALTHY, 0.6f);
-        start_probability.put(FEVER, 0.4f);
-
-        // transition_probability
-        HashMap<String, HashMap<String, Float>> transition_probability =
-                new HashMap<String, HashMap<String, Float>>();
-        HashMap<String, Float> t1 = new HashMap<String, Float>();
-        t1.put(HEALTHY, 0.7f);
-        t1.put(FEVER, 0.3f);
-        HashMap<String, Float> t2 = new HashMap<String, Float>();
-        t2.put(HEALTHY, 0.4f);
-        t2.put(FEVER, 0.6f);
-        transition_probability.put(HEALTHY, t1);
-        transition_probability.put(FEVER, t2);
-
-        // emission_probability
-        HashMap<String, HashMap<String, Float>> emission_probability =
-                new HashMap<String, HashMap<String, Float>>();
-        HashMap<String, Float> e1 = new HashMap<String, Float>();
-        e1.put(DIZZY, 0.1f);
-        e1.put(COLD, 0.4f);
-        e1.put(NORMAL, 0.5f);
-        HashMap<String, Float> e2 = new HashMap<String, Float>();
-        e2.put(DIZZY, 0.6f);
-        e2.put(COLD, 0.3f);
-        e2.put(NORMAL, 0.1f);
-        emission_probability.put(HEALTHY, e1);
-        emission_probability.put(FEVER, e2);
-
-        ArrayList<String> ret = forward_viterbi(observations,
-                states,
-                start_probability,
-                transition_probability,
-                emission_probability);
-        for (String s : ret){
-            System.out.print(s + " ");
-        }
-    }
-
-
-    public static ArrayList<String> forward_viterbi(String[] obs, String[] states,
+   public static ArrayList<String> forward_viterbi(String[] obs, String[] states,
                                                     HashMap<String, Float> start_p,
                                                     HashMap<String, HashMap<String, Float>> trans_p,
                                                     HashMap<String, HashMap<String, Float>> emit_p) {
