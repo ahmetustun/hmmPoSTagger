@@ -1,2 +1,19 @@
 Hazine_null/Noun Merkez_i/Noun rahat_la_t_tı/Verb
-Geçen_null/Adj hafta_null/Noun kısa_null/Adj vade_li/Adj avans_null/Noun hesab_ı_na/Noun 48.7_null/Num trilyon_null/Num lira_lik/Adj geri_null/Adj öde_me/Noun yap_an/Adj Hazine_null/Noun Merkez_null/Noun Banka_sı_n_ı/Noun rahatla_t_tı/Verb
+
+Geçen_null/Adj hafta_null/Noun kısa_null/Adj vade_li/DB avans_null/Noun hesab_ı_na/Noun 48.7_null/Num trilyon_null/Num lira_lik/Adj geri_null/Adj öde_me/Noun yap_an/Adj Hazine/Noun Merkez/Noun Banka_sı_n_ı/Noun rahatla_t_tı/Verb
+
+Hazine_nin/Noun kullan_abil_eceğ_i/Adj avans_null/Noun 69.1_null/Num trilyon_a/Noun çık_ar_ken/Adv ,_null/Punc döviz_null/Noun rezerv_ler_i_nde/Noun 45_null/Num milyon_null/Num dolar_lık/Adj eri_me/Noun göz_le_n_di/Verb
+
+Yılbaşın_ndan/Noun bu_null/Det  yan_a/Noun Merkez_null/Noun Banka_sı/Noun kaynak_lar_ı_na/Noun yük_le_n_en/Adj hazine_null/Noun ,_null/Punc  geç_en/Adj hafta_null/Noun durum_u_nu/Noun  düzel_t_ti/Verb
+
+Geç_en/Adj hafta_null/Noun 48.7_null/Num trilyon_null/Num lira_lık/Adj avans_null/Noun  kapa_t_an/Adj  Hazine_null/Noun  kullan_abil_eceğ_i/Adj kısa_null/Adj  vade_li/Adj avans_null/Noun tut_ar_ı_nı/Noun da_null/Conj 69.1_null/Num trilyon_a/Noun çık_ar_dı/Verb
+
+Merkez_null/Noun  Banka_sı_nın/Noun 17_null/Num -_null/Punc 24_null/Num Ocak_null/Num tarih_li/Adj bilanço_su_na/Noun göre_null/Postp 484.6_null/Num  trilyon_null/Num lira_null/Noun ol_an/Adj kısa_null/Adj vade_li/Adj avans_null/Noun ,_null/Punc bir_null/Num hafta_da/Noun 48.7_null/Noun trilyon_luk/Adj az_al_ış_la/Noun 24_null/Num Ocak_ta/Noun 435.8_null/Num trilyon_null/Num lira_ya/Noun in_di/Verb
+
+Hazine_nin/Noun geri_null/Adj öde_me_si_yle/Adv Merkez_null/Noun Bankası_nn/Noun iç_null/Adj varlık_lar_ı/Noun önem_li/Adj ölçü_de/Adv geri_le_di/Verb
+
+17_null/Num Ocak_ta/Noun 738.9_null/Num trilyon_null/Num lira_null/Noun ol_an/Adj iç_null/Noun var_lık_lar/Noun toplam_ı/Noun 72.1_null/Num trilyon_null/Num lira_lık/Adj az_al_ış_la/Adv 666.8_null/Num trilyon_a/Noun düş_tü/Verb
+
+Kamu_ya/Noun aç_ıl_an/Adj kredi_ler_in/Noun geri_le_me_si/Noun yan_ı_nda/Noun Açık_null/Adj Piyasa_null/Noun iş_lem_ler_i/Noun yol_u_yla/Adv piyasa_dan/Noun çek_il_en/Adj likidite_nin/Noun etki_si_yle/Adv 72.1_null/Num trilyon_null/Num lira_lık/Adj iç_null/Adj var_lık_lar_ın/Noun az_al_ış_ı/Noun ile_null/Postp bir_lik_te/Postp rezerv_null/Noun para_null/Noun ve_null/Conj Merkez_null/Noun Banka_sı/Noun para_sı_nda/Noun da_null/Conj geri_le_me/Noun göz_le_n_di/Verb
+
+17_null/Num Ocak_ta/Noun 158.5_null/Num trilyon_null/Num ol_an/Adj Açık_null/Adj piyasa_null/Noun iş_lem_ler_i/Noun borc_u/Noun 10_null/Num trilyon_null/Num lira_lık/Adj art_ış_la/Adv  24_null/Num Ocak_null/Noun itibar_i/Noun ile_null/Postp 168.5_null/Num trilyon_a/Noun çık_tı/Verb
