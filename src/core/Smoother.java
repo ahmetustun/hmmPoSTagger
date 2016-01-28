@@ -60,10 +60,8 @@ public class Smoother {
 
         for (String s : words) {
 
-            String[] word_tag_pair = s.split(Parse.tag_a);
-            String[] root_suffixes = word_tag_pair[0].split(Parse.ek_a);
+            String[] root_suffixes = s.split(Parse.ek_a);
 
-            String tag = word_tag_pair[1];
             String suffix = root_suffixes[root_suffixes.length - 1];
 
             sList.add(suffix);

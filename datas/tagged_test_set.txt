@@ -1,1 +1,5 @@
-BB
+Yılbaşın_ndan/Noun bu_null/Det yan_a/Noun Merkez_null/Noun Banka_sı/Noun kaynak_lar_ı_na/Noun yük_le_n_en/Adj hazine_null/Noun ,_null/Punc geç_en/Adj hafta_null/Noun durum_u_nu/Noun düzel_t_ti/Verb
+Geç_en/Adj hafta_null/Noun 48.7_null/Num trilyon_null/Num lira_lık/Adj avans_null/Noun kapa_t_an/Adj Hazine_null/Noun kullan_abil_eceğ_i/Adj kısa_null/Adj vade_li/Adj avans_null/Noun tut_ar_ı_nı/Noun da_null/Conj 69.1_null/Num trilyon_a/Noun çık_ar_dı/Verb
+Merkez_null/Noun Banka_sı_nın/Noun 17_null/Num -_null/Punc 24_null/Num Ocak_null/Num tarih_li/Adj bilanço_su_na/Noun göre_null/Postp 484.6_null/Num trilyon_null/Num lira_null/Noun ol_an/Adj kısa_null/Adj vade_li/Adj avans_null/Noun ,_null/Punc bir_null/Num hafta_da/Noun 48.7_null/Noun trilyon_luk/Adj az_al_ış_la/Noun 24_null/Num Ocak_ta/Noun 435.8_null/Num trilyon_null/Num lira_ya/Noun in_di/Verb
+Hazine_nin/Noun geri_null/Adj öde_me_si_yle/Adv Merkez_null/Noun Bankası_nın/Noun iç_null/Adj varlık_lar_ı/Noun önem_li/Adj ölçü_de/Adv geri_le_di/Verb
+17_null/Num Ocak_ta/Noun 738.9_null/Num trilyon_null/Num lira_null/Noun ol_an/Adj iç_null/Noun var_lık_lar/Noun toplam_ı/Noun 72.1_null/Num trilyon_null/Num lira_lık/Adj az_al_ış_la/Adv 666.8_null/Num trilyon_a/Noun düş_tü/Verb
