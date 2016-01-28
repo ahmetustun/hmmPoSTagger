@@ -11,10 +11,10 @@ import java.util.Hashtable;
 public class Viterbi
 {
 
-   public static ArrayList<String> forward_viterbi(String[] obs, String[] states,
-                                                    HashMap<String, Float> start_p,
-                                                    HashMap<String, HashMap<String, Float>> trans_p,
-                                                    HashMap<String, HashMap<String, Float>> emit_p) {
+   public static ArrayList<String> forwardViterbi(String[] obs, String[] states,
+                                                  HashMap<String, Float> start_p,
+                                                  HashMap<String, HashMap<String, Float>> trans_p,
+                                                  HashMap<String, HashMap<String, Float>> emit_p) {
         ArrayList<String> statesList = new ArrayList<>();
         Hashtable<String, Object[]> T = new Hashtable<String, Object[]>();
         for (String state : states)
