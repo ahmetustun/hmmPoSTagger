@@ -11,12 +11,12 @@ public class Scorer {
 
     private ArrayList<String> sentences = new ArrayList<>();
     ArrayList<ArrayList<String>> originalTagList = new ArrayList<>();
-    ArrayList<ArrayList<String>> generatedTagList;
+    ArrayList<ArrayList<String>> generatedTagList = new ArrayList<>();
 
     float score;
 
     public Scorer(String fileName, ArrayList<ArrayList<String>> generatedTagList){
-        this.generatedTagList = generatedTagList;
+        this.generatedTagList = (ArrayList<ArrayList<String>>) generatedTagList.clone();
         Parse.parseTrainFile(fileName, sentences);
     }
 

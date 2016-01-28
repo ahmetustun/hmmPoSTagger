@@ -17,12 +17,10 @@ public class Smoother {
     private ArrayList<ArrayList<String>> unTaggedSuffixesList = new ArrayList<>();
 
     // uns : unsmoothed
-    private HashMap<String, Integer> uns_startCountMap;
-    private HashMap<String, Integer> uns_tagCountMap;
-    private HashMap<String, Integer> uns_suffixCountMap;
+    private HashMap<String, Integer> uns_tagCountMap = new HashMap<>();
+    private HashMap<String, Integer> uns_suffixCountMap = new HashMap<>();
 
-    private HashMap<String, HashMap<String, Integer>> uns_transmissionPairMap;
-    private HashMap<String, HashMap<String, Integer>> uns_emissionPairMap;
+    private HashMap<String, HashMap<String, Integer>> uns_emissionPairMap = new HashMap<>();
 
     private HashMap<String, Integer> s_suffixCountMap = new HashMap<>();
     private HashMap<String, HashMap<String, Integer>> s_emissionPairMap = new HashMap<>();
@@ -30,25 +28,21 @@ public class Smoother {
 
     private ArrayList<String> unseenSuffixList = new ArrayList<>();
 
-    public Smoother(HashMap<String, Integer> uns_startCountMap, HashMap<String, Integer> uns_tagCountMap, HashMap<String, Integer> uns_suffixCountMap,
-                    HashMap<String, HashMap<String, Integer>> uns_transmissionPairMap, HashMap<String, HashMap<String, Integer>> uns_emissionPairMap){
+    public Smoother(HashMap<String, Integer> uns_tagCountMap, HashMap<String, Integer> uns_suffixCountMap,
+                    HashMap<String, HashMap<String, Integer>> uns_emissionPairMap){
 
-        this.uns_emissionPairMap = uns_emissionPairMap;
-        this.uns_transmissionPairMap = uns_transmissionPairMap;
-        this.uns_startCountMap = uns_startCountMap;
-        this.uns_tagCountMap = uns_tagCountMap;
-        this.uns_suffixCountMap = uns_suffixCountMap;
+        this.uns_emissionPairMap = (HashMap<String, HashMap<String, Integer>>) uns_emissionPairMap.clone();
+        this.uns_tagCountMap = (HashMap<String, Integer>) uns_tagCountMap.clone();
+        this.uns_suffixCountMap = (HashMap<String, Integer>) uns_suffixCountMap.clone();
 
     }
 
     public Smoother(String fileName, HashMap<String, Integer> uns_startCountMap, HashMap<String, Integer> uns_tagCountMap, HashMap<String, Integer> uns_suffixCountMap,
                     HashMap<String, HashMap<String, Integer>> uns_transmissionPairMap, HashMap<String, HashMap<String, Integer>> uns_emissionPairMap){
 
-        this.uns_emissionPairMap = uns_emissionPairMap;
-        this.uns_transmissionPairMap = uns_transmissionPairMap;
-        this.uns_startCountMap = uns_startCountMap;
-        this.uns_tagCountMap = uns_tagCountMap;
-        this.uns_suffixCountMap = uns_suffixCountMap;
+        this.uns_emissionPairMap = (HashMap<String, HashMap<String, Integer>>) uns_emissionPairMap.clone();
+        this.uns_tagCountMap = (HashMap<String, Integer>) uns_tagCountMap.clone();
+        this.uns_suffixCountMap = (HashMap<String, Integer>) uns_suffixCountMap.clone();
 
         Parse.parseTrainFile(fileName, unt_sentences);
     }
@@ -101,7 +95,7 @@ public class Smoother {
 
     public void addOneForEmission(){
 
-        s_suffixCountMap = uns_suffixCountMap;
+        s_suffixCountMap = (HashMap<String, Integer>) uns_suffixCountMap.clone();
         for (String unseenSuffix : unseenSuffixList){
             s_suffixCountMap.put(unseenSuffix, 0);
         }
