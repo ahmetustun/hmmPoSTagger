@@ -37,8 +37,8 @@ public class Smoother {
 
     }
 
-    public Smoother(String fileName, HashMap<String, Integer> uns_startCountMap, HashMap<String, Integer> uns_tagCountMap, HashMap<String, Integer> uns_suffixCountMap,
-                    HashMap<String, HashMap<String, Integer>> uns_transmissionPairMap, HashMap<String, HashMap<String, Integer>> uns_emissionPairMap){
+    public Smoother(String fileName, HashMap<String, Integer> uns_tagCountMap, HashMap<String, Integer> uns_suffixCountMap,
+                    HashMap<String, HashMap<String, Integer>> uns_emissionPairMap){
 
         this.uns_emissionPairMap = (HashMap<String, HashMap<String, Integer>>) uns_emissionPairMap.clone();
         this.uns_tagCountMap = (HashMap<String, Integer>) uns_tagCountMap.clone();
