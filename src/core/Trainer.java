@@ -32,6 +32,10 @@ public class Trainer {
     public Trainer(String fileName) {
         for (String s : PartOfSpeech.tag_list){
             tagCountMap.put(s, 0);
+            for (String k : PartOfSpeech.tag_list){
+                LastTwo<String, String> lastTwo = new LastTwo<>(s, k);
+                bigramCountMap.put(lastTwo, 0);
+            }
         }
         Parse.parseTrainFile(fileName, sentences);
     }
@@ -39,6 +43,10 @@ public class Trainer {
     public Trainer() {
         for (String s : PartOfSpeech.tag_list){
             tagCountMap.put(s, 0);
+            for (String k : PartOfSpeech.tag_list){
+                LastTwo<String, String> lastTwo = new LastTwo<>(s, k);
+                bigramCountMap.put(lastTwo, 0);
+            }
         }
     }
 
@@ -316,7 +324,6 @@ public class Trainer {
 
     public void analyse(int ngram){
 
-
         switch (ngram){
             case 2:{
                 for (String sentence : sentences){
@@ -329,8 +336,10 @@ public class Trainer {
             case 3:{
                 for (String sentence : sentences){
                     countEmissionPair(sentence);
+                    countBigramTransmissionPair(sentence);
                     countTrigramTransmissionPair(sentence);
                 }
+                calculateBigramTransmissionProbability();
                 calculateTrigramTransmissionProbability();
                 break;
             }

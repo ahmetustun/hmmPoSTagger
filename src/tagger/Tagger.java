@@ -37,7 +37,7 @@ public class Tagger {
                 my_POS_tag_count, my_obs_count,
                 my_emission_pair_count);
 
-        smoother.addOne();
+        smoother.addOneForEmission();
 
         ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
         HashMap<String, Integer> my_suffix_count_map = smoother.getS_suffixCountMap();
