@@ -18,7 +18,7 @@ public class Tagger {
     public static void main(String[] args) {
 
         Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/train_set.txt");
-        trainer.analyse(3);
+        trainer.analyse(2);
 
         HashMap<String, Integer> my_start_count = trainer.getStartCountMap();
         HashMap<String, Integer> my_POS_tag_count = trainer.getTagCountMap();
@@ -45,12 +45,21 @@ public class Tagger {
         HashMap<String, HashMap<String, Float>> my_s_emission_prob = smoother.getS_emissionProbabilitiesMap();
         ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
         ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
+        ArrayList<ArrayList<String>> generated_sentences_Tags_2 = new ArrayList<>();
 
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_emission_prob);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_emission_prob);
             generated_sentences_Tags.add(generatedTags);
         }
+
+        for (ArrayList<String> a : my_unt_sentences_suffixes){
+            String[] obs = a.toArray(new String[0]);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams_Test(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_emission_prob);
+            generated_sentences_Tags_2.add(generatedTags);
+        }
+
+        boolean ok = generated_sentences_Tags.equals(generated_sentences_Tags_2);
 
         Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/tagged_test_set.txt", generated_sentences_Tags);
         float my_score = scorer.getScore();
