@@ -55,13 +55,13 @@ public class Tagger {
 
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams_Test(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_emission_prob);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_emission_prob);
             generated_sentences_Tags_2.add(generatedTags);
         }
 
         boolean ok = generated_sentences_Tags.equals(generated_sentences_Tags_2);
 
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/tagged_test_set.txt", generated_sentences_Tags);
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/tagged_test_set.txt", generated_sentences_Tags_2);
         float my_score = scorer.getScore();
 
         System.out.println("\n" + my_score);
