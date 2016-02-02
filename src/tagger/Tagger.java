@@ -18,7 +18,7 @@ public class Tagger {
     public static void main(String[] args) {
 
         Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/train_set.txt");
-        trainer.analyse(2);
+        trainer.analyse(3);
 
         HashMap<String, Integer> my_start_count = trainer.getStartCountMap();
         HashMap<String, Integer> my_POS_tag_count = trainer.getTagCountMap();
@@ -34,10 +34,10 @@ public class Tagger {
         HashMap<LastTwo<String, String>, HashMap<String, Float>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
         Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/test_set.txt",
-                my_POS_tag_count, my_obs_count,
+                my_POS_tag_count, my_bigramCountMap, my_obs_count, my_trigramTransmissionPairMap,
                 my_emission_pair_count);
 
-        smoother.addOneForEmission();
+        smoother.addOne(3);
 
         ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
         HashMap<String, Integer> my_suffix_count_map = smoother.getS_suffixCountMap();
@@ -49,19 +49,11 @@ public class Tagger {
 
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_emission_prob);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_trigramTransmissionProbabilityMap,  my_s_emission_prob);
             generated_sentences_Tags.add(generatedTags);
         }
 
-        for (ArrayList<String> a : my_unt_sentences_suffixes){
-            String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_emission_prob);
-            generated_sentences_Tags_2.add(generatedTags);
-        }
-
-        boolean ok = generated_sentences_Tags.equals(generated_sentences_Tags_2);
-
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/tagged_test_set.txt", generated_sentences_Tags_2);
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/tagged_test_set.txt", generated_sentences_Tags);
         float my_score = scorer.getScore();
 
         System.out.println("\n" + my_score);

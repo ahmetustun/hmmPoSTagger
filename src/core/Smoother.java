@@ -67,9 +67,10 @@ public class Smoother {
     }
 
     public Smoother(String fileName, HashMap<String, Integer> uns_tagCountMap, HashMap<LastTwo<String, String>, Integer> uns_bigramCountMap,
-                    HashMap<String, Integer> uns_suffixCountMap,
+                    HashMap<String, Integer> uns_suffixCountMap, HashMap<LastTwo<String, String>, HashMap<String, Integer>> uns_trigramTransmissionPairMap,
                     HashMap<String, HashMap<String, Integer>> uns_emissionPairMap){
 
+        this.uns_trigramTransmissionPairMap = (HashMap<LastTwo<String, String>, HashMap<String, Integer>>) uns_trigramTransmissionPairMap.clone();
         this.uns_emissionPairMap = (HashMap<String, HashMap<String, Integer>>) uns_emissionPairMap.clone();
         this.uns_tagCountMap = (HashMap<String, Integer>) uns_tagCountMap.clone();
         this.uns_bigramCountMap = (HashMap<LastTwo<String, String>, Integer>) uns_bigramCountMap.clone();
@@ -185,11 +186,19 @@ public class Smoother {
         for (String first : PartOfSpeech.tag_list){
             for (String second : PartOfSpeech.tag_list){
                 LastTwo<String, String> lastTwo = new LastTwo<>(first, second);
-                HashMap<String, Integer> t_count = uns_trigramTransmissionPairMap.get(lastTwo);
+                HashMap<String, Integer> t_count = new HashMap<>();
+                if (uns_trigramTransmissionPairMap.containsKey(lastTwo)){
+                    t_count = uns_trigramTransmissionPairMap.get(lastTwo);
+                }
                 int denominator = uns_bigramCountMap.get(lastTwo) + 12;
                 HashMap<String, Float> t_prob = new HashMap<>();
                 for (String tag : PartOfSpeech.tag_list){
-                    float numerator = (float)(t_count.get(tag) + 1);
+                    float numerator = 0f;
+                    if (t_count.containsKey(tag)){
+                        numerator = (float)(t_count.get(tag) + 1);
+                    } else {
+                        numerator = 1;
+                    }
                     t_prob.put(tag, numerator/denominator);
                 }
                 s_trigramTransmissionProbabilityMap.put(lastTwo, t_prob);
