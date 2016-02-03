@@ -37,6 +37,10 @@ public class Trainer {
             for (String k : PartOfSpeech.tag_list){
                 Bigram<String, String> bigram = new Bigram<>(s, k);
                 bigramCountMap.put(bigram, 0);
+                for (String m : PartOfSpeech.tag_list){
+                    Trigram<String, String, String> trigram = new Trigram<>(s, k, m);
+                    trigramCountMap.put(trigram, 0);
+                }
             }
         }
         Parse.parseTrainFile(fileName, sentences);
@@ -48,6 +52,10 @@ public class Trainer {
             for (String k : PartOfSpeech.tag_list){
                 Bigram<String, String> bigram = new Bigram<>(s, k);
                 bigramCountMap.put(bigram, 0);
+                for (String m : PartOfSpeech.tag_list){
+                    Trigram<String, String, String> trigram = new Trigram<>(s, k, m);
+                    trigramCountMap.put(trigram, 0);
+                }
             }
         }
     }
@@ -64,7 +72,12 @@ public class Trainer {
         return bigramCountMap;
     }
 
+    public HashMap<Trigram<String, String, String>, Integer> getTrigramCountMap() {
+        return trigramCountMap;
+    }
+
     public HashMap<String, HashMap<String, Integer>> getBigramTransmissionPairMap() {
+
         return bigramTransmissionPairMap;
     }
 
@@ -164,14 +177,18 @@ public class Trainer {
                     startCountMap.put(tag, 1);
                 }
             } else if (!second.equals("START")) {
-                Bigram<String, String> bigram = new Bigram<>(first, second);
 
-                if (bigramCountMap.containsKey(bigram)) {
+                Bigram<String, String> bigram = new Bigram<>(first, second);
+                //if (bigramCountMap.containsKey(bigram)) {
                     int c = bigramCountMap.get(bigram) + 1;
                     bigramCountMap.put(bigram, c);
-                } else {
-                    bigramCountMap.put(bigram, 1);
-                }
+                //} else {
+                //    bigramCountMap.put(bigram, 1);
+                //}
+
+                Trigram trigram = new Trigram(first, second, tag);
+                int nu = trigramCountMap.get(trigram) + 1;
+                trigramCountMap.put(trigram, nu);
 
                 if (trigramTransmissionPairMap.containsKey(bigram)) {
                     HashMap<String, Integer> tag_num = trigramTransmissionPairMap.get(bigram);
