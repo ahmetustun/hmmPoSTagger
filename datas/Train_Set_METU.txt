@@ -1,0 +1,99 @@
+peşreve/Noun başla_ma_lı/Adj ./Punc
+ama/Conj anne_m_in/Noun şart_ları/Noun var_dı/Verb ./Punc
+sanal/Adj parça_cık_lar_sa/Verb bun_lar_ın/Noun hiçbiri_ni/Pron yap_a_ma_z_lar/Noun ./Punc
+o_na/Pron her/Det şey_im_i/Noun ver_di_m/Verb ./Punc
+bir/Adj sigar_a/Noun yak_mış_tı/Verb ./Punc
+karşı_sı_nda/Noun ,/Punc pantolon_u/Noun diz_ler_i_ne/Noun dek/Adj ıslak/Adj ,/Punc ön_lük/Noun torba_sı/Noun ham/Adj erik_ler_le/Noun dolu/Adj ibrahim/Noun dik_il_iyor_du/Verb ./Punc
+inşaat_ta/Noun çalış_acak/Adj vasıf_sız/Adj işçi_ler_in/Noun alım_ı_nda/Noun söz_leş_me/Noun gereğ_i/Noun güzergah/Noun boy_u_nda_ki/Adj köy_ler_i_ne/Noun önce_lik/Noun ver_il_ecek/Adj ./Punc
+ercan/Noun tezer/Noun ,/Punc iç/Adj pazar_da/Noun bu/Det yıl/Noun seksen/Num bin/Adj otomobil/Noun ve/Conj toplam/Noun yuzotuzbin/Adj araç/Noun sat_ıl_ma_sı_nın/Noun bekle_n_diğ_i_ni/Noun kayded_erek/Adv ,/Punc "/Punc "/Punc onaltı/Num yıl/Noun geri_den/Noun id_iyor_uz/Verb "/Punc "/Punc de_di/Verb ./Punc
+nere_den/Noun bil_iyor_sunuz/Verb ./Punc
+ara_dığ_ım_ı/Noun bul_du_m/Verb san_dı_m/Verb ./Punc
+kahve_ler_i/Noun ben_de/Noun iç_e_lim/Verb ./Punc
+ne/Adj diyeceğimi bile_me_di_m/Verb ./Punc
+kana_m_ıyor_du/Verb ... süpürge_n/Noun nerede/Adv ./Punc
+bir/Adj taksi/Noun bul_du_k/Verb ./Punc
+mebrure/Noun birden/Adv heyecanlan_mış_tı/Verb ./Punc
+"/Punc "/Punc bura_da_ki/Adj üst/Noun düzey/Noun görüşme_ler_imiz_de/Noun turizm/Noun için/Postp el_ler_i_nden/Noun gele_n_i/Noun yap_acak_ları_nı/Noun söyle_di_ler/Verb ./Punc
+gel/Verb bak/Verb ,/Punc san_a/Verb ev_i/Noun göster_e_yim/Verb ./Punc
+herkes/Pron iste_diğ_i/Adj gibi/Postp seviş_iyor/Verb ,/Punc her/Det şey/Noun serbest/Adj ./Punc
+ke_n_di_ler_i_yle/Verb görüş_tüğ_üm_den/Noun edin_diğ_im/Adj izlenim/Noun ,/Punc gazete_ci_ye/Noun ver_il_en/Adj bilgi_ler_le/Noun alaka_sız/Adj bir/Adj haber_in/Noun yayımla_n_mış/Adj ol_duğ_u_dur/Verb ./Punc
+heyecan_lı/Adj ve/Conj yorgun/Adj görün_üyor_sunuz/Verb ,/Punc de_di/Verb ./Punc
+gülümse_me_ler/Noun ./Punc
+külür_ün/Noun kır_an/Adj birbuçuk ay/Interj önce/Postp yeğen_i/Noun doğu_m/Noun yap_ınca/Adv istanbul_a/Noun git_ti/Verb ./Punc
+ora_da_ki/Adj tartış_ma/Noun hayli/Adv zengin/Adj ./Punc
+kot/Adj pantolon_la/Noun gelen/Adj hiçbir/Det çocuk/Noun yok_tu/Verb ./Punc
+rekabet/Noun ne_ler/Noun yap_tır_ıyor/Verb ./Punc
+bu/Det yüz_den/Noun trend_ler_le/Noun çok/Adv ilgi_li_ler/Noun ./Punc
+taşhan_ın/Noun kapı_sı_nı/Noun it_ip/Adv içeri_ye/Noun gir_di_m/Verb ./Punc
+beraber/Adv yemek/Noun y_iyor_lar/Verb ./Punc
+kerem/Noun ,/Punc özgürlüğ_ü_nü/Noun teslim/Noun et_tiğ_i/Adj için/Postp sanki/Adv rahatla_mış_tı/Verb ./Punc
+yasal/Adj valium/Noun ,/Punc diazem/Noun gibi/Postp hap_lar_dan/Noun eroin_e/Noun geç_en_ler/Noun ara_sı_nda/Noun ben_i/Noun en/Adv çok/Adv şaşkın_lığ_a/Noun düşür_en/Adj kişi/Noun ,/Punc yet_miş/Verb yaş_lar_ı_nda/Noun şık/Adj giyim_li/Adj bir/Adj kadın/Noun oldu/Interj ./Punc
+sen/Pron o/Interj kadar/Postp anlat_mış_sın/Verb ./Punc
+pencere_si_nden/Noun görünendir ./Punc
+maziyle/Noun bağla_r_ı_nı/Noun kopar_ıyor/Verb ./Punc
+değişik_lik_le/Noun ,/Punc milletvekil_i/Noun seç_il_me/Noun yeterli_liğ_i_ni/Noun düzenle_yen/Adj yetmişaltı ./Punc
+madde_de_ki/Adj ,/Punc "/Punc "/Punc ideolojik/Adj ve/Conj anarşik/Adj eylem_ler/Noun "/Punc "/Punc ifade_si/Noun "/Punc "/Punc terör/Noun eylem_ler_i/Noun "/Punc "/Punc diye/Postp değiş_tir_il_di/Verb ,/Punc erdoğan_ın/Noun işle_diğ_i/Adj suç/Noun ,/Punc seç_il_me_si_ne/Noun engel/Noun ol_mak_tan/Noun çıkar_ıl_dı/Verb ./Punc
+nefes/Noun nefes_e/Noun kal_mış_tı_m/Verb ./Punc
+en/Adv sonunda/Adv içeri_den/Noun gök/Noun gürültü_sü/Noun gibi/Postp bir/Adj ses/Noun gel_miş/Verb ./Punc
+ramiz/Noun yer_i_nden/Noun kalk_mış/Verb naci/Noun beyin/Noun yan_ı_na/Noun kadar/Postp sokul_muş_tu/Verb ./Punc
+hafta_lar/Noun sonra/Adv bul_muş/Verb ./Punc
+tüm_ü_yle/Noun meşru/Adj yol_lar_la/Noun yüksek/Adj rakım_lı/Adj tepe_ye/Noun çık_mış/Adj adam_ı/Noun şişman/Adj ve/Conj ahali_yi/Noun pişman/Adj eyl_iyor_lar/Verb ./Punc
+sözgelimi/Adv nükhet/Noun bu/Det akşam/Noun ben_i/Noun ara_ma_sa_ydı/Verb ... niye/Adv ?/Punc ./Punc
+tombul/Adj diz_ler_i/Noun ,/Punc masa_nın/Noun alt_ı_ndan/Noun mahmut_un/Noun diz_ler_i_ne/Noun yapış_mış_tı/Verb ./Punc
+bu/Det sefer/Noun akl_ı_na/Noun milli/Adj savun_ma/Verb bakanlığı_nın/Noun asker_i/Noun usul/Noun ceza/Noun yasası_n_a/Noun göre/Postp el_i_nde/Noun tut_tuğ_u/Adj bir/Adj yetki/Noun gel_di/Verb ./Punc
+ankara_da/Noun birçok/Det avukat_a/Noun başvur_du_m/Verb ./Punc
+kap_ıcı/Noun hergele_si_nin/Noun bak_ış_ı_nı/Noun gör_se_n/Verb ,/Punc aç/Verb kurt/Noun gibi/Postp ... niçin/Adv ./Punc
+serin/Adj hava_yla/Noun hafif_çe/Adj ürper_mek_ten/Noun ,/Punc hayat_ın/Noun gerçek_liğ_i_ne/Noun dokun_mak_tan/Noun ve/Conj sır_lar_ı_nı/Noun hisset_mek_ten/Noun hoşnut_tu_m/Verb ./Punc
+şarkı_cı_yı/Noun yakın_dan/Noun gör_mek/Noun için/Postp gel_en_ler_in/Noun izdiham_a/Noun neden/Adv ol_duğ_u/Adj aç_ıl_ış_ta/Noun ,/Punc aksüt/Noun ,/Punc tören/Noun boyunca/Postp eş_i_ni/Noun yalnız/Conj bırak_ma_dı/Verb ./Punc
+aydın_lık/Noun gazete_si_nde/Noun konuş_tuğ_u/Adj muhabir_ler/Noun ,/Punc biz/Noun siz_e/Pron yardım_cı/Noun ol_a_lım/Verb ,/Punc de_di_ler/Verb ./Punc
+bardağ_ı/Noun masa_nın/Noun üst_ü_ne/Noun koy_du/Verb ./Punc
+bu/Det durum/Noun yapı/Noun kredi/Noun hisse_ler_i/Noun üzerinde/Adv bask_ı/Noun yarat_arak/Adv mali/Adj sektör/Noun hisse_ler_i_ni/Noun olumsuz/Adj yön_de/Noun etkile_yebil_ir/Verb ./Punc
+bir/Adj defa_sı_nda/Noun laf/Noun oraya/Adv gel_ir/Verb gibi/Postp oldu/Interj ,/Punc derhal/Adv ,/Punc halled_il_me_miş/Adj bir/Adj başka/Adj tartış_ma_yı/Noun aç_arak/Adv herkesi sürükle_di_m/Verb ./Punc
+şimdi/Adv allah_a/Noun şükür/Noun her/Det mevsim/Noun var/Adj ./Punc
+asıl/Noun düğüm_ü/Noun çöz_mek/Noun ve/Conj en/Adv önem_li_si/Noun hukuk_sal/Adj alt/Adj yapı_yı/Noun sağlam/Adv temel_ler_e/Noun otur_t_abil_mek/Noun için/Postp doküman_lar_ın/Noun tamam_ı_na/Noun ulaş_mak/Noun gerek_iyor_du/Verb ./Punc
+ne/Adj anlat_acak_tı_n/Verb ./Punc
+ancak/Conj savaş/Verb tehdid_i_nin/Noun ol_duğ_u/Adj bir/Adj ortam_da/Noun borsa_ya/Noun taze/Noun par_a/Noun gel_m_iyor/Verb ./Punc
+bayındır/Noun sokak_ta_ki/Adj bekar/Noun ev_im_den/Noun çık_tı_m/Verb ./Punc
+çocuk_lar/Noun görev/Noun gereğ_i/Noun gösterilen/Noun sevgi/Noun ve/Conj ilgi_yle/Noun ,/Punc iç_ten/Noun gelen/Adj sevgi/Noun ve/Conj ilgi_yi/Noun ayırt/Noun ed_ecek/Adj kadar/Postp duy_ar_lı_dır/Verb ./Punc
+tam/Adj umud_u_nu/Noun kes_ip/Adv geri/Adv dön_eceğ_i/Noun sıra_da/Noun şehr_in/Noun en/Adv uc_u_ndan/Noun çık_an/Adj duman_ı/Noun gör_müş/Adj ./Punc
+esmer/Noun ,/Punc bıyık_lı/Adj ./Punc
+umut_lar/Noun biz_im_le_dir/Verb ./Punc
+ba_n_a/Noun şöyle/Adv bir/Adj yol/Noun göster_di/Verb :/Punc siz/Pron önce_lik_le/Noun kendinize bir/Adj avukat/Noun bul_mak/Noun zor_u_nda_sınız/Verb ./Punc
+ama/Conj de_n_me_z/Adj ./Punc
+tunguz_lar_ın/Noun on/Num bir/Adj kol_u_ndan/Noun biri/Pron evenler/Noun ./Punc
+ba_n_a/Noun kim/Conj buyur_du/Verb :/Punc manastır_a/Noun git/Verb !/Punc kul_unuz/Noun ./Punc
+yer_de/Noun araç/Noun iz_i_nin/Noun ol_ma_ma_sı/Noun ve/Conj kamyon_un/Noun ilerle_yecek/Verb yol/Noun bula_ma_ma_sı/Noun ,/Punc orman_ın/Noun bu/Det bölüm_ü_ne/Noun kasaba_dan/Noun sıkça/Adv gel_in_me_diğ_i_ni/Noun göster_iyor_du/Verb ./Punc
+patlıcan/Noun mide_ye/Noun muzır/Adj ./Punc
+sonunda/Adv bir/Adj başka/Adj yol/Noun bul_du_lar/Verb ./Punc
+aşırı/Adv ,/Punc aşırı/Adv ./Punc
+hülya/Noun için/Postp sevin_iyor_du_m/Verb ./Punc
+midouze/Noun nehr_i/Noun üzerinde/Adv ./Punc
+bizimkinde/Noun ,/Punc bil_in_me_yen/Adj bir/Adj öteki/Adj dünya_da/Noun akl_ımız_a/Noun hayal_imiz_e/Noun gel_me_yecek/Adj ceza_lar_a/Noun uğra_ma/Noun korku_su/Noun var/Adj ./Punc
+düz/Adj ,/Punc sağlam/Adv ,/Punc sade/Adj ... rokfor_un/Noun efsane_si/Noun :/Punc vakt_i_yle/Noun ,/Punc genç/Noun bir/Adj çoban/Noun var_mış/Verb ./Punc
+cumhurbaşkan_ı/Noun ile/Conj sürtüş_en/Adj bir/Adj iktidar/Noun ol_mak/Noun iste_m_iyor_uz/Verb ./Punc
+na/Noun toplantı_lar_ı_nda/Noun ilk/Adj kez/Noun başka_lar_ı_na/Noun yönel_di_m/Verb ./Punc
+küçük/Adj bir/Adj mızrap/Noun vur_uş_u_yla/Noun çık_an/Adj güçlü/Adj ama/Conj maden_sel/Adj ses/Noun ,/Punc deniz_de_ki/Adj tekne_ler_e/Noun bir/Adj eğlence_nin/Noun başla_mak/Noun üzere/Postp ol_duğ_u_nu/Adj haber/Noun ver_ir_di/Verb ./Punc
+balık_lar_dan/Noun hamsi/Noun ./Punc
+yer_im_den/Noun fırla_dı_m/Verb ,/Punc kapı_yı/Noun hız_la/Noun aç_ıp/Adv ömür/Noun uza_t_ma/Noun kıraathanesi_n_den/Noun dışarı_ya/Noun çık_tı_m/Verb ./Punc
+ev/Noun ,/Punc aile_nin/Noun yurd_u_dur/Verb ./Punc
+boş/Adj sokak_ta/Noun topuk_lu/Adj ayakkabı_lar_ın/Noun çıkar_t_tığ_ı/Adj ,/Punc yankıla_n_an/Adj bir/Adj ses/Noun duy_ul_du/Verb ./Punc
+fransa_nın/Noun güneybatı_sı_nda/Noun ./Punc
+erkek/Adj öğretmen/Noun daha/Adv sert/Adv olur/Adj ,/Punc kız_lar_la/Noun an_laş_a_ma_z/Verb diye/Postp düşün_üyor_um/Verb ./Punc
+bayağı/Adj kız_ıyor_sun/Verb ./Punc
+defalarca/Adv kay_ma_sı_na/Noun (/Punc uyuştur_ucu_ya/Noun yeniden/Adv başla_ma_sı_na/Noun )/Punc rağmen/Postp şimdi/Adv karar_lı/Adj görün_üyor/Verb ./Punc
+bebe_ler/Noun murad_ı_na/Noun er_di/Verb ./Punc
+(/Punc is_im/Noun ver_m_iyor_um/Verb ./Punc
+"/Punc "/Punc söz/Noun konu_su/Noun meblağ/Noun sosyal/Adj yardım_laş_ma/Noun ve/Conj dayanışma/Noun vakıf_lar_ı_na/Noun gönder_il_miş_tir/Verb ./Punc
+ard_ı_ndan/Noun üniversite_de/Noun ,/Punc ben_im_le/Noun ilgilen_en/Adj kız_lar_la/Noun dolaş_ma_ya/Noun başla_dı_m/Verb ./Punc
+ya/Interj da/Conj ard_ı_ndan/Noun mutlaka/Adv sevgi/Noun sözcük_ler_i/Noun kullan_ır/Verb ./Punc
+bir/Adj ihtimal/Noun ol_arak/Adv bu/Det husus_u/Noun belirt_iyor_lar/Verb ./Punc
+arabesk/Noun yerine/Adv türk/Noun pop/Adj müziği_n_i/Noun tercih/Noun ed_iyor_lar/Verb ./Punc
+üç/Num )/Punc imkb/Noun endeks_ler_i_ne/Noun paralel/Adj seyir/Noun göster_me_yi/Noun hedefle_yen/Adj a/Interj tip_i/Noun endeks/Noun fon_lar/Noun :/Punc bu/Det kategori_de_ki/Adj fon_lar/Noun yıl_ı/Noun imkb_de_ki/Adj kayb_a/Noun paralel/Adj kapat_tı_lar/Verb ./Punc
+rapor_u/Noun hazırla_yan/Adj heyet_in/Noun başkan_ı/Noun kurmay/Noun pilot/Adj albay/Noun erol/Noun polat_tı/Verb ./Punc
+ne_si/Noun var/Adj ./Punc
+bir/Adj yasakla_ma_nın/Noun için_de_ydi_k/Verb ./Punc
+hıçkırık_lar_ım_ın/Noun ara_sı_nda/Noun söyle_dik_leri_ni/Noun dinle_me_ye/Noun başla_dı_m/Verb ./Punc
+arınç_ın/Noun fark_lı/Adj yaz_ıl_dığ_ı_nı/Noun iddia/Noun et_tiğ_i/Adj söz_ler_i_ne/Noun ilişkin/Postp bölü_m/Noun teyp/Noun kayd_ı_ndan/Noun aynen/Adv şöyle/Adv :/Punc ./Punc
+iz_i_ni/Noun bul_ur_sa_nız/Verb ,/Punc bu/Det numara_ya/Noun haber/Noun ver_ir_siniz/Verb ,/Punc de_di/Verb ./Punc
+az/Adj önce/Postp onu_n_la/Noun konuş_uyor_du_m/Verb ,/Punc de_di_m/Verb ./Punc
+bilgi_ye/Noun ,/Punc yeni/Adj asker_i/Noun araç_lar_ın/Noun geliş_tir_il_me_si/Noun ve/Conj devlet/Noun düzen_i_nin/Noun sağlam_laş_tır_ıl_ma_sı_nın/Noun aracı/Adj göz_ü_yle/Noun bak_an/Adj roma/Noun ,/Punc teori_yi/Noun ,/Punc vakit/Noun kayb_ı_ndan/Noun başka/Adj bir/Adj iş_e/Noun yara_ma_yan/Adj bir/Adj etkin_lik/Noun say_arak/Adv hor/Adj gör_müş_tür/Verb ./Punc

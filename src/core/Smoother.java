@@ -85,7 +85,8 @@ public class Smoother {
     }
 
     public Smoother(String fileName, HashMap<String, Integer> uns_tagCountMap, HashMap<Bigram<String, String>, Integer> uns_bigramCountMap, HashMap<String, HashMap<String, Integer>> uns_bigramTransmissionPairMap,
-                    HashMap<String, Integer> uns_suffixCountMap, HashMap<Bigram<String, String>, HashMap<String, Integer>> uns_trigramTransmissionPairMap, HashMap<Trigram, Integer> uns_trigramCountMap,
+                    HashMap<String, Integer> uns_suffixCountMap, HashMap<Bigram<String, String>, HashMap<String, Integer>> uns_trigramTransmissionPairMap,
+                    HashMap<Trigram<String, String, String>, Integer> uns_trigramCountMap,
                     HashMap<String, HashMap<String, Float>> emissionProbabilitiesMap, HashMap<String, HashMap<String, Integer>> uns_emissionPairMap){
 
         this.uns_trigramTransmissionPairMap = (HashMap<Bigram<String, String>, HashMap<String, Integer>>) uns_trigramTransmissionPairMap.clone();
