@@ -1,13 +1,9 @@
 package tagger;
 
-import core.Scorer;
 import core.Smoother;
 import core.Trainer;
-import core.Viterbi;
-import utils.LastTwo;
-import utils.PartOfSpeech;
+import utils.Bigram;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -29,27 +25,32 @@ public class Tagger {
         HashMap<String, HashMap<String, Float>> my_transmission_prob = trainer.getBigramTransmissionProbabilitiesMap();
         HashMap<String, HashMap<String, Float>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
 
-        HashMap<LastTwo<String, String>, Integer> my_bigramCountMap = trainer.getBigramCountMap();
-        HashMap<LastTwo<String, String>, HashMap<String, Integer>> my_trigramTransmissionPairMap = trainer.getTrigramTransmissionPairMap();
-        HashMap<LastTwo<String, String>, HashMap<String, Float>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
+        HashMap<Bigram<String, String>, Integer> my_bigramCountMap = trainer.getBigramCountMap();
+        HashMap<Bigram<String, String>, HashMap<String, Integer>> my_trigramTransmissionPairMap = trainer.getTrigramTransmissionPairMap();
+        HashMap<Bigram<String, String>, HashMap<String, Float>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
         Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/test_set.txt",
                 my_POS_tag_count, my_bigramCountMap, my_obs_count, my_trigramTransmissionPairMap,
                 my_emission_pair_count);
 
+        smoother.calculateKneserNey_D();
+
+        /*
         smoother.addOne(3);
 
+
         ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
-        HashMap<String, Integer> my_suffix_count_map = smoother.getS_suffixCountMap();
-        HashMap<String, HashMap<String, Integer>> my_s_emission_pair_count = smoother.getS_emissionPairMap();
-        HashMap<String, HashMap<String, Float>> my_s_emission_prob = smoother.getS_emissionProbabilitiesMap();
+        HashMap<String, Integer> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
+        HashMap<String, HashMap<String, Integer>> my_s_emission_pair_count = smoother.getLaplace_emissionPairMap();
+        HashMap<String, HashMap<String, Float>> my_s_emission_prob = smoother.getLaplace_emissionProbabilitiesMap();
+        HashMap<LastTwo<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap = smoother.getLaplace_trigramTransmissionProbabilityMap();
         ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
         ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
         ArrayList<ArrayList<String>> generated_sentences_Tags_2 = new ArrayList<>();
 
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_trigramTransmissionProbabilityMap,  my_s_emission_prob);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_trigramProbabilityMap,  my_s_emission_prob);
             generated_sentences_Tags.add(generatedTags);
         }
 
@@ -66,6 +67,7 @@ public class Tagger {
 
         System.out.println("\n" + my_score);
         System.out.println("Tamamlandı");
+        */
 
     }
 

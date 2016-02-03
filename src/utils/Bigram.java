@@ -6,9 +6,9 @@ import java.util.Map;
 /**
  * Created by ahmet on 31/01/16.
  */
-public class LastTwo<F, S> extends AbstractMap.SimpleImmutableEntry {
+public class Bigram<F, S> extends AbstractMap.SimpleImmutableEntry {
 
-    public LastTwo(Object key, Object value) {
+    public Bigram(Object key, Object value) {
         super(key, value);
     }
 }

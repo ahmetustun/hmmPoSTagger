@@ -1,8 +1,9 @@
 package core;
 
-import utils.LastTwo;
+import utils.Bigram;
 import utils.PartOfSpeech;
 import utils.Parse;
+import utils.Trigram;
 
 import java.util.*;
 
@@ -15,7 +16,8 @@ public class Trainer {
 
     private HashMap<String, Integer> startCountMap = new HashMap<>();
     private HashMap<String, Integer> tagCountMap = new HashMap<>();
-    private HashMap<LastTwo<String, String>, Integer> bigramCountMap = new HashMap<>();
+    private HashMap<Bigram<String, String>, Integer> bigramCountMap = new HashMap<>();
+    private HashMap<Trigram<String, String, String>, Integer> trigramCountMap = new HashMap<>();
 
     private HashMap<String, Integer> suffixCountMap = new HashMap<>();
 
@@ -26,15 +28,15 @@ public class Trainer {
     private HashMap<String, HashMap<String, Float>> bigramTransmissionProbabilitiesMap = new HashMap<>();
     private HashMap<String, HashMap<String, Float>> emissionProbabilitiesMap = new HashMap<>();
 
-    private HashMap<LastTwo<String, String>, HashMap<String, Integer>> trigramTransmissionPairMap = new HashMap<>();
-    private HashMap<LastTwo<String, String>, HashMap<String, Float>> trigramTransmissionProbabilityMap = new HashMap<>();
+    private HashMap<Bigram<String, String>, HashMap<String, Integer>> trigramTransmissionPairMap = new HashMap<>();
+    private HashMap<Bigram<String, String>, HashMap<String, Float>> trigramTransmissionProbabilityMap = new HashMap<>();
 
     public Trainer(String fileName) {
         for (String s : PartOfSpeech.tag_list){
             tagCountMap.put(s, 0);
             for (String k : PartOfSpeech.tag_list){
-                LastTwo<String, String> lastTwo = new LastTwo<>(s, k);
-                bigramCountMap.put(lastTwo, 0);
+                Bigram<String, String> bigram = new Bigram<>(s, k);
+                bigramCountMap.put(bigram, 0);
             }
         }
         Parse.parseTrainFile(fileName, sentences);
@@ -44,8 +46,8 @@ public class Trainer {
         for (String s : PartOfSpeech.tag_list){
             tagCountMap.put(s, 0);
             for (String k : PartOfSpeech.tag_list){
-                LastTwo<String, String> lastTwo = new LastTwo<>(s, k);
-                bigramCountMap.put(lastTwo, 0);
+                Bigram<String, String> bigram = new Bigram<>(s, k);
+                bigramCountMap.put(bigram, 0);
             }
         }
     }
@@ -58,7 +60,7 @@ public class Trainer {
         return tagCountMap;
     }
 
-    public HashMap<LastTwo<String, String>, Integer> getBigramCountMap() {
+    public HashMap<Bigram<String, String>, Integer> getBigramCountMap() {
         return bigramCountMap;
     }
 
@@ -86,11 +88,11 @@ public class Trainer {
         return suffixCountMap;
     }
 
-    public HashMap<LastTwo<String, String>, HashMap<String, Integer>> getTrigramTransmissionPairMap() {
+    public HashMap<Bigram<String, String>, HashMap<String, Integer>> getTrigramTransmissionPairMap() {
         return trigramTransmissionPairMap;
     }
 
-    public HashMap<LastTwo<String, String>, HashMap<String, Float>> getTrigramTransmissionProbabilityMap() {
+    public HashMap<Bigram<String, String>, HashMap<String, Float>> getTrigramTransmissionProbabilityMap() {
         return trigramTransmissionProbabilityMap;
     }
 
@@ -162,28 +164,28 @@ public class Trainer {
                     startCountMap.put(tag, 1);
                 }
             } else if (!second.equals("START")) {
-                LastTwo<String, String> lastTwo = new LastTwo<>(first, second);
+                Bigram<String, String> bigram = new Bigram<>(first, second);
 
-                if (bigramCountMap.containsKey(lastTwo)) {
-                    int c = bigramCountMap.get(lastTwo) + 1;
-                    bigramCountMap.put(lastTwo, c);
+                if (bigramCountMap.containsKey(bigram)) {
+                    int c = bigramCountMap.get(bigram) + 1;
+                    bigramCountMap.put(bigram, c);
                 } else {
-                    bigramCountMap.put(lastTwo, 1);
+                    bigramCountMap.put(bigram, 1);
                 }
 
-                if (trigramTransmissionPairMap.containsKey(lastTwo)) {
-                    HashMap<String, Integer> tag_num = trigramTransmissionPairMap.get(lastTwo);
+                if (trigramTransmissionPairMap.containsKey(bigram)) {
+                    HashMap<String, Integer> tag_num = trigramTransmissionPairMap.get(bigram);
                     if (tag_num.containsKey(tag)) {
                         int n = tag_num.get(tag) + 1;
                         tag_num.put(tag, n);
                     } else {
                         tag_num.put(tag, 1);
                     }
-                    trigramTransmissionPairMap.put(lastTwo, tag_num);
+                    trigramTransmissionPairMap.put(bigram, tag_num);
                 } else {
                     HashMap<String, Integer> tag_num = new HashMap<String, Integer>();
                     tag_num.put(tag, 1);
-                    trigramTransmissionPairMap.put(lastTwo, tag_num);
+                    trigramTransmissionPairMap.put(bigram, tag_num);
                 }
             }
             first = second;
@@ -271,24 +273,24 @@ public class Trainer {
     public void calculateTrigramTransmissionProbability(){
         for (String f : PartOfSpeech.tag_list){
             for (String se : PartOfSpeech.tag_list){
-                LastTwo<String, String> lastTwo = new LastTwo<>(f, se);
-                if (trigramTransmissionPairMap.containsKey(lastTwo)){
-                    HashMap<String, Integer> transmitteds = trigramTransmissionPairMap.get(lastTwo);
+                Bigram<String, String> bigram = new Bigram<>(f, se);
+                if (trigramTransmissionPairMap.containsKey(bigram)){
+                    HashMap<String, Integer> transmitteds = trigramTransmissionPairMap.get(bigram);
                     HashMap<String, Float> t_prob = new HashMap<String, Float>();
                     for (String t : PartOfSpeech.tag_list){
                         if (transmitteds.containsKey(t)){
-                            t_prob.put(t, (float)transmitteds.get(t)/ bigramCountMap.get(lastTwo));
+                            t_prob.put(t, (float)transmitteds.get(t)/ bigramCountMap.get(bigram));
                         } else {
                             t_prob.put(t, 0f);
                         }
-                        trigramTransmissionProbabilityMap.put(lastTwo, t_prob);
+                        trigramTransmissionProbabilityMap.put(bigram, t_prob);
                     }
                 } else {
                     HashMap<String, Float> t_prob = new HashMap<String, Float>();
                     for (String t : PartOfSpeech.tag_list){
                         t_prob.put(t, 0f);
                     }
-                    trigramTransmissionProbabilityMap.put(lastTwo, t_prob);
+                    trigramTransmissionProbabilityMap.put(bigram, t_prob);
                 }
             }
         }

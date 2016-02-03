@@ -3,13 +3,10 @@ package core;
 /**
  * Created by ahmet on 22/01/16.
  */
-import utils.LastTwo;
-import utils.PartOfSpeech;
+import utils.Bigram;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 public class Viterbi
 {
@@ -192,7 +189,7 @@ public class Viterbi
 
    public static ArrayList<String> forwardViterbiForTrigrams(String[] obs, String[] states,
                                                              HashMap<String, Float> start_p,
-                                                             HashMap<String, HashMap<String, Float>> bigram_trans_p, HashMap<LastTwo<String, String>, HashMap<String, Float>> trigram_trans_p,
+                                                             HashMap<String, HashMap<String, Float>> bigram_trans_p, HashMap<Bigram<String, String>, HashMap<String, Float>> trigram_trans_p,
                                                              HashMap<String, HashMap<String, Float>> emit_p) {
        ArrayList<String> statesList = new ArrayList<>();
 
@@ -208,7 +205,7 @@ public class Viterbi
 
        for (int i=2; i<obs.length; i++){
 
-           LastTwo<String, String> lastTwo = new LastTwo<>(first, second);
+           Bigram<String, String> bigram = new Bigram<>(first, second);
 
            float max_p = 0f;
            String next_tag = "";
@@ -216,7 +213,7 @@ public class Viterbi
                HashMap<String, Float> e_m = emit_p.get(next);
                float e = e_m.get(obs[i]);
 
-               HashMap<String, Float> t_m = trigram_trans_p.get(lastTwo);
+               HashMap<String, Float> t_m = trigram_trans_p.get(bigram);
                float t = t_m.get(next);
 
                float curr_p = e * t;
