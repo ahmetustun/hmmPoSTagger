@@ -14,29 +14,29 @@ public class Trainer {
 
     private ArrayList<String> sentences = new ArrayList<>();
 
-    private HashMap<String, Integer> startCountMap = new HashMap<>();
-    private HashMap<String, Integer> tagCountMap = new HashMap<>();
-    private HashMap<Bigram<String, String>, Integer> bigramCountMap = new HashMap<>();
-    private HashMap<Trigram<String, String, String>, Integer> trigramCountMap = new HashMap<>();
+    private HashMap<String, Float> startCountMap = new HashMap<>();
+    private HashMap<String, Float> tagCountMap = new HashMap<>();
+    private HashMap<Bigram<String, String>, Float> bigramCountMap = new HashMap<>();
+    private HashMap<Trigram<String, String, String>, Float> trigramCountMap = new HashMap<>();
 
-    private HashMap<String, Integer> suffixCountMap = new HashMap<>();
+    private HashMap<String, Float> suffixCountMap = new HashMap<>();
 
-    private HashMap<String, HashMap<String, Integer>> bigramTransmissionPairMap = new HashMap<>();
-    private HashMap<String, HashMap<String, Integer>> emissionPairMap = new HashMap<>();
+    private HashMap<String, HashMap<String, Float>> bigramTransmissionPairMap = new HashMap<>();
+    private HashMap<String, HashMap<String, Float>> emissionPairMap = new HashMap<>();
 
     private HashMap<String, Float> startProbabilitiesMap = new HashMap<>();
     private HashMap<String, HashMap<String, Float>> bigramTransmissionProbabilitiesMap = new HashMap<>();
     private HashMap<String, HashMap<String, Float>> emissionProbabilitiesMap = new HashMap<>();
 
-    private HashMap<Bigram<String, String>, HashMap<String, Integer>> trigramTransmissionPairMap = new HashMap<>();
+    private HashMap<Bigram<String, String>, HashMap<String, Float>> trigramTransmissionPairMap = new HashMap<>();
     private HashMap<Bigram<String, String>, HashMap<String, Float>> trigramTransmissionProbabilityMap = new HashMap<>();
 
     public Trainer(String fileName) {
         for (String s : PartOfSpeech.tag_list){
-            tagCountMap.put(s, 0);
+            tagCountMap.put(s, 0f);
             for (String k : PartOfSpeech.tag_list){
                 Bigram<String, String> bigram = new Bigram<>(s, k);
-                bigramCountMap.put(bigram, 0);
+                bigramCountMap.put(bigram, 0f);
                 for (String m : PartOfSpeech.tag_list){
                     Trigram<String, String, String> trigram = new Trigram<>(s, k, m);
                     trigramCountMap.put(trigram, 0);

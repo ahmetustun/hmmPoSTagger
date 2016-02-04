@@ -56,7 +56,7 @@ public class Tagger {
             generated_sentences_Tags.add(generatedTags);
         }
 
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/Tagged_Test_Tet_METU.txt", generated_sentences_Tags);
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/Tagged_Test_Set_METU.txt", generated_sentences_Tags);
         float my_score = scorer.getScore();
 
         System.out.println("\n" + my_score);
