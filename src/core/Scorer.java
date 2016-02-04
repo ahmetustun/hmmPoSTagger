@@ -28,7 +28,12 @@ public class Scorer {
         for (String s : words) {
 
             String[] root_suffixes = s.split(Parse.tag_a);
-            String tag = root_suffixes[1];
+            String tag = "";
+            if (root_suffixes.length < 2){
+                tag = "Unk";
+            } else {
+                tag = root_suffixes[1];
+            }
 
             tList.add(tag);
         }

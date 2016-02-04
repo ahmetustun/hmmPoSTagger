@@ -39,7 +39,7 @@ public class Trainer {
                 bigramCountMap.put(bigram, 0f);
                 for (String m : PartOfSpeech.tag_list){
                     Trigram<String, String, String> trigram = new Trigram<>(s, k, m);
-                    trigramCountMap.put(trigram, 0);
+                    trigramCountMap.put(trigram, 0f);
                 }
             }
         }
@@ -48,40 +48,40 @@ public class Trainer {
 
     public Trainer() {
         for (String s : PartOfSpeech.tag_list){
-            tagCountMap.put(s, 0);
+            tagCountMap.put(s, 0f);
             for (String k : PartOfSpeech.tag_list){
                 Bigram<String, String> bigram = new Bigram<>(s, k);
-                bigramCountMap.put(bigram, 0);
+                bigramCountMap.put(bigram, 0f);
                 for (String m : PartOfSpeech.tag_list){
                     Trigram<String, String, String> trigram = new Trigram<>(s, k, m);
-                    trigramCountMap.put(trigram, 0);
+                    trigramCountMap.put(trigram, 0f);
                 }
             }
         }
     }
 
-    public HashMap<String, Integer> getStartCountMap() {
+    public HashMap<String, Float> getStartCountMap() {
         return startCountMap;
     }
 
-    public HashMap<String, Integer> getTagCountMap() {
+    public HashMap<String, Float> getTagCountMap() {
         return tagCountMap;
     }
 
-    public HashMap<Bigram<String, String>, Integer> getBigramCountMap() {
+    public HashMap<Bigram<String, String>, Float> getBigramCountMap() {
         return bigramCountMap;
     }
 
-    public HashMap<Trigram<String, String, String>, Integer> getTrigramCountMap() {
+    public HashMap<Trigram<String, String, String>, Float> getTrigramCountMap() {
         return trigramCountMap;
     }
 
-    public HashMap<String, HashMap<String, Integer>> getBigramTransmissionPairMap() {
+    public HashMap<String, HashMap<String, Float>> getBigramTransmissionPairMap() {
 
         return bigramTransmissionPairMap;
     }
 
-    public HashMap<String, HashMap<String, Integer>> getEmissionPairMap() {
+    public HashMap<String, HashMap<String, Float>> getEmissionPairMap() {
         return emissionPairMap;
     }
 
@@ -97,11 +97,11 @@ public class Trainer {
         return emissionProbabilitiesMap;
     }
 
-    public HashMap<String, Integer> getSuffixCountMap() {
+    public HashMap<String, Float> getSuffixCountMap() {
         return suffixCountMap;
     }
 
-    public HashMap<Bigram<String, String>, HashMap<String, Integer>> getTrigramTransmissionPairMap() {
+    public HashMap<Bigram<String, String>, HashMap<String, Float>> getTrigramTransmissionPairMap() {
         return trigramTransmissionPairMap;
     }
 
@@ -116,36 +116,41 @@ public class Trainer {
         String prev = "START";
         for (String s : words) {
             String[] word_tag_pair = s.split(Parse.tag_a);
-            String tag = word_tag_pair[1];
+            String tag = "";
+            if (word_tag_pair.length < 2){
+                tag = "Unk";
+            } else {
+                tag = word_tag_pair[1];
+            }
 
             if (tagCountMap.containsKey(tag)) {
 
-                int n = tagCountMap.get(tag) + 1;
+                float n = tagCountMap.get(tag) + 1f;
                 tagCountMap.put(tag, n);
             } else {
-                tagCountMap.put(tag, 1);
+                tagCountMap.put(tag, 1f);
             }
 
             if (prev.equals("START")) {
                 if (startCountMap.containsKey(tag)) {
-                    int n = startCountMap.get(tag) + 1;
+                    float n = startCountMap.get(tag) + 1f;
                     startCountMap.put(tag, n);
                 } else {
-                    startCountMap.put(tag, 1);
+                    startCountMap.put(tag, 1f);
                 }
             } else {
                 if (bigramTransmissionPairMap.containsKey(prev)) {
-                    HashMap<String, Integer> tag_num = bigramTransmissionPairMap.get(prev);
+                    HashMap<String, Float> tag_num = bigramTransmissionPairMap.get(prev);
                     if (tag_num.containsKey(tag)) {
-                        int n = tag_num.get(tag) + 1;
+                        float n = tag_num.get(tag) + 1f;
                         tag_num.put(tag, n);
                     } else {
-                        tag_num.put(tag, 1);
+                        tag_num.put(tag, 1f);
                     }
                     bigramTransmissionPairMap.put(prev, tag_num);
                 } else {
-                    HashMap<String, Integer> tag_num = new HashMap<String, Integer>();
-                    tag_num.put(tag, 1);
+                    HashMap<String, Float> tag_num = new HashMap<String, Float>();
+                    tag_num.put(tag, 1f);
                     bigramTransmissionPairMap.put(prev, tag_num);
                 }
             }
@@ -160,48 +165,57 @@ public class Trainer {
         String second = "START";
         for (String s : words) {
             String[] word_tag_pair = s.split(Parse.tag_a);
-            String tag = word_tag_pair[1];
+            String tag = "";
+            if (word_tag_pair.length < 2){
+                tag = "Unk";
+            } else {
+                tag = word_tag_pair[1];
+            }
 
             if (tagCountMap.containsKey(tag)) {
-                int n = tagCountMap.get(tag) + 1;
+                float n = tagCountMap.get(tag) + 1f;
                 tagCountMap.put(tag, n);
             } else {
-                tagCountMap.put(tag, 1);
+                tagCountMap.put(tag, 1f);
             }
 
             if (first.equals("START")) {
                 if (startCountMap.containsKey(tag)) {
-                    int n = startCountMap.get(tag) + 1;
+                    float n = startCountMap.get(tag) + 1f;
                     startCountMap.put(tag, n);
                 } else {
-                    startCountMap.put(tag, 1);
+                    startCountMap.put(tag, 1f);
                 }
             } else if (!second.equals("START")) {
 
                 Bigram<String, String> bigram = new Bigram<>(first, second);
-                //if (bigramCountMap.containsKey(bigram)) {
-                    int c = bigramCountMap.get(bigram) + 1;
+                if (bigramCountMap.containsKey(bigram)) {
+                    float c = bigramCountMap.get(bigram) + 1f;
                     bigramCountMap.put(bigram, c);
-                //} else {
-                //    bigramCountMap.put(bigram, 1);
-                //}
+                } else {
+                    bigramCountMap.put(bigram, 1f);
+                }
 
                 Trigram trigram = new Trigram(first, second, tag);
-                int nu = trigramCountMap.get(trigram) + 1;
-                trigramCountMap.put(trigram, nu);
+                if (trigramCountMap.containsKey(trigram)) {
+                    float nu = trigramCountMap.get(trigram) + 1f;
+                    trigramCountMap.put(trigram, nu);
+                } else {
+                    trigramCountMap.put(trigram, 1f);
+                }
 
                 if (trigramTransmissionPairMap.containsKey(bigram)) {
-                    HashMap<String, Integer> tag_num = trigramTransmissionPairMap.get(bigram);
+                    HashMap<String, Float> tag_num = trigramTransmissionPairMap.get(bigram);
                     if (tag_num.containsKey(tag)) {
-                        int n = tag_num.get(tag) + 1;
+                        float n = tag_num.get(tag) + 1f;
                         tag_num.put(tag, n);
                     } else {
-                        tag_num.put(tag, 1);
+                        tag_num.put(tag, 1f);
                     }
                     trigramTransmissionPairMap.put(bigram, tag_num);
                 } else {
-                    HashMap<String, Integer> tag_num = new HashMap<String, Integer>();
-                    tag_num.put(tag, 1);
+                    HashMap<String, Float> tag_num = new HashMap<String, Float>();
+                    tag_num.put(tag, 1f);
                     trigramTransmissionPairMap.put(bigram, tag_num);
                 }
             }
@@ -218,29 +232,35 @@ public class Trainer {
             String[] word_tag_pair = s.split(Parse.tag_a);
             String[] root_suffixes = word_tag_pair[0].split(Parse.ek_a);
 
-            String tag = word_tag_pair[1];
+            String tag = "";
+            if (word_tag_pair.length < 2){
+                tag = "Unk";
+            } else {
+                tag = word_tag_pair[1];
+            }
+
             String suffix = root_suffixes[root_suffixes.length - 1];
 
             if (suffixCountMap.containsKey(suffix)) {
 
-                int n = suffixCountMap.get(suffix) + 1;
+                float n = suffixCountMap.get(suffix) + 1f;
                 suffixCountMap.put(suffix, n);
             } else {
-                suffixCountMap.put(suffix, 1);
+                suffixCountMap.put(suffix, 1f);
             }
 
             if (emissionPairMap.containsKey(tag)) {
-                HashMap<String, Integer> tag_num = emissionPairMap.get(tag);
+                HashMap<String, Float> tag_num = emissionPairMap.get(tag);
                 if (tag_num.containsKey(suffix)) {
-                    int n = tag_num.get(suffix) + 1;
+                    float n = tag_num.get(suffix) + 1f;
                     tag_num.put(suffix, n);
                 } else {
-                    tag_num.put(suffix, 1);
+                    tag_num.put(suffix, 1f);
                 }
                 emissionPairMap.put(tag, tag_num);
             } else {
-                HashMap<String, Integer> tag_num = new HashMap<String, Integer>();
-                tag_num.put(suffix, 1);
+                HashMap<String, Float> tag_num = new HashMap<String, Float>();
+                tag_num.put(suffix, 1f);
                 emissionPairMap.put(tag, tag_num);
             }
         }
@@ -248,10 +268,10 @@ public class Trainer {
 
     public void calculateStartProbabilities() {
 
-        int totalStartPoint = 0;
+        float totalStartPoint = 0;
         Iterator it = startCountMap.values().iterator();
         while (it.hasNext()){
-            totalStartPoint = totalStartPoint + (Integer) it.next();
+            totalStartPoint = totalStartPoint + (Float) it.next();
         }
 
         for (String s : PartOfSpeech.tag_list){
@@ -267,7 +287,7 @@ public class Trainer {
 
         for (String s : PartOfSpeech.tag_list){
             if (bigramTransmissionPairMap.containsKey(s)){
-                HashMap<String, Integer> transmitteds = bigramTransmissionPairMap.get(s);
+                HashMap<String, Float> transmitteds = bigramTransmissionPairMap.get(s);
                 HashMap<String, Float> t_prob = new HashMap<String, Float>();
                 for (String t : PartOfSpeech.tag_list){
                     if (transmitteds.containsKey(t)){
@@ -292,7 +312,7 @@ public class Trainer {
             for (String se : PartOfSpeech.tag_list){
                 Bigram<String, String> bigram = new Bigram<>(f, se);
                 if (trigramTransmissionPairMap.containsKey(bigram)){
-                    HashMap<String, Integer> transmitteds = trigramTransmissionPairMap.get(bigram);
+                    HashMap<String, Float> transmitteds = trigramTransmissionPairMap.get(bigram);
                     HashMap<String, Float> t_prob = new HashMap<String, Float>();
                     for (String t : PartOfSpeech.tag_list){
                         if (transmitteds.containsKey(t)){
@@ -317,7 +337,7 @@ public class Trainer {
 
         for (String s : PartOfSpeech.tag_list){
             if (emissionPairMap.containsKey(s)){
-                HashMap<String, Integer> emitteds = emissionPairMap.get(s);
+                HashMap<String, Float> emitteds = emissionPairMap.get(s);
                 HashMap<String, Float> e_prob = new HashMap<String, Float>();
                 Iterator it = suffixCountMap.keySet().iterator();
                 while (it.hasNext()){
