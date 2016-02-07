@@ -43,9 +43,13 @@ public class Smoother {
     private HashMap<String, HashMap<String, Float>>  kneserNey_bigramTransmissionProbabilityMap = new HashMap<>();
     private HashMap<Bigram<String, String>, HashMap<String, Float>> kneserNey_trigramTransmissionProbabilityMap = new HashMap<>();
     private HashMap<String, HashMap<String, Float>> kneserNey_emissionProbabilitiesMap = new HashMap<>();
+
+    private HashMap<String, HashMap<String, Float>> interpolation_emissionProbabilitiesMap = new HashMap<>();
+
     float kneserNey_D_bigram = 0f;
     float kneserNey_D_trigram = 0f;
     float additiveNumber = 0.5f;
+    float interpolationBeta = 0.5f;
 
     public Smoother(HashMap<String, Float> uns_tagCountMap, HashMap<String, Float> uns_suffixCountMap, HashMap<String, HashMap<String, Float>> uns_bigramTransmissionPairMap,
                     HashMap<String, HashMap<String, Float>> emissionProbabilitiesMap, HashMap<String, HashMap<String, Float>> uns_emissionPairMap){
@@ -152,8 +156,13 @@ public class Smoother {
         return kneserNey_trigramTransmissionProbabilityMap;
     }
 
+    public HashMap<String, HashMap<String, Float>> getInterpolation_emissionProbabilitiesMap() {
+        return interpolation_emissionProbabilitiesMap;
+    }
+
     public HashMap<String, HashMap<String, Float>> getKneserNey_emissionProbabilitiesMap() {
         return kneserNey_emissionProbabilitiesMap;
+
     }
 
     public HashMap<String, HashMap<String, Float>> getLaplace_emissionPairMap() {
@@ -261,13 +270,30 @@ public class Smoother {
     }
 
     public void kneserNeySmooothing(){
-        calculateTagProbabilities();
-        countUnseenSuffixesForTestCorpus();
+        tagRatioBasedEmission();
         calculateKneserNey_D_forBigram();
         calculateKneserNey_D_forTrigram();
         calculateKneserNey_bigramTransmissionProbabilities();
         calculateKneserNey_trigramTransmissionProbabilities();
-        calculateKneserNeyEmissionProbabilities();
+    }
+
+    public void tagRatioBasedEmission() {
+        calculateTagProbabilities();
+        countUnseenSuffixesForTestCorpus();
+        calculateEmissionProbabilitiesWithTagRatio();
+    }
+
+    public void interpolationBasedEmission() {
+        countUnseenSuffixesForTestCorpus();
+        interpolationForEmission();
+    }
+
+    public void interpolationSmooting() {
+        interpolationBasedEmission();
+        calculateKneserNey_D_forBigram();
+        calculateKneserNey_D_forTrigram();
+        calculateKneserNey_bigramTransmissionProbabilities();
+        calculateKneserNey_trigramTransmissionProbabilities();
     }
 
     public void calculateKneserNey_D_forTrigram(){
@@ -456,7 +482,7 @@ public class Smoother {
         }
     }
 
-    public void calculateKneserNeyEmissionProbabilities(){
+    public void calculateEmissionProbabilitiesWithTagRatio(){
         for (String s : PartOfSpeech.tag_list){
             if (uns_emissionProbabilitiesMap.containsKey(s)){
                 HashMap<String, Float> emitteds = uns_emissionProbabilitiesMap.get(s);
@@ -474,5 +500,33 @@ public class Smoother {
         }
     }
 
+    public void interpolationForEmission() {
+            laplace_suffixCountMap = (HashMap<String, Float>) uns_suffixCountMap.clone();
+            for (String unseenSuffix : unseenSuffixList){
+                laplace_suffixCountMap.put(unseenSuffix, 0f);
+            }
+
+            float total = 0f;
+            Iterator<String> keys = laplace_suffixCountMap.keySet().iterator();
+            while (keys.hasNext()){
+                String suffix = keys.next();
+                total = total + laplace_suffixCountMap.get(suffix);
+            }
+
+            for (String s : PartOfSpeech.tag_list){
+                    HashMap<String, Float> emitteds = uns_emissionPairMap.get(s);
+                    HashMap<String, Float> t_prob = new HashMap<String, Float>();
+                    Iterator it = laplace_suffixCountMap.keySet().iterator();
+                    while (it.hasNext()){
+                        String obs = (String)it.next();
+                        if (emitteds.containsKey(obs)){
+                            t_prob.put(obs, (interpolationBeta * emitteds.get(obs) + (1 - interpolationBeta) * ( 1 / total)));
+                        } else {
+                            t_prob.put(obs, (1 - interpolationBeta) * ( 1 / total));
+                        }
+                        interpolation_emissionProbabilitiesMap.put(s, t_prob);
+                    }
+                }
+    }
 
 }
