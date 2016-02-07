@@ -118,7 +118,7 @@ public class Trainer {
             String[] word_tag_pair = s.split(Parse.tag_a);
             String tag = "";
             if (word_tag_pair.length < 2){
-                tag = "Unk";
+                tag = "Noun";
             } else {
                 tag = word_tag_pair[1];
             }
@@ -167,7 +167,7 @@ public class Trainer {
             String[] word_tag_pair = s.split(Parse.tag_a);
             String tag = "";
             if (word_tag_pair.length < 2){
-                tag = "Unk";
+                tag = "Noun";
             } else {
                 tag = word_tag_pair[1];
             }
@@ -234,7 +234,7 @@ public class Trainer {
 
             String tag = "";
             if (word_tag_pair.length < 2){
-                tag = "Unk";
+                tag = "Noun";
             } else {
                 tag = word_tag_pair[1];
             }

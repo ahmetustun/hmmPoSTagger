@@ -30,7 +30,7 @@ public class Scorer {
             String[] root_suffixes = s.split(Parse.tag_a);
             String tag = "";
             if (root_suffixes.length < 2){
-                tag = "Unk";
+                tag = "Noun";
             } else {
                 tag = root_suffixes[1];
             }

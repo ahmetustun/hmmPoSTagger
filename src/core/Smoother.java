@@ -54,7 +54,7 @@ public class Smoother {
         this.uns_tagCountMap = (HashMap<String, Float>) uns_tagCountMap.clone();
         this.uns_suffixCountMap = (HashMap<String, Float>) uns_suffixCountMap.clone();
         this.uns_bigramTransmissionPairMap = (HashMap<String, HashMap<String, Float>>) uns_bigramTransmissionPairMap.clone();
-        this.uns_emissionProbabilitiesMap = (HashMap<String, HashMap<String, Float>>) uns_emissionProbabilitiesMap.clone();
+        this.uns_emissionProbabilitiesMap = (HashMap<String, HashMap<String, Float>>) emissionProbabilitiesMap.clone();
 
     }
 
@@ -65,7 +65,7 @@ public class Smoother {
         this.uns_tagCountMap = (HashMap<String, Float>) uns_tagCountMap.clone();
         this.uns_suffixCountMap = (HashMap<String, Float>) uns_suffixCountMap.clone();
         this.uns_bigramTransmissionPairMap = (HashMap<String, HashMap<String, Float>>) uns_bigramTransmissionPairMap.clone();
-        this.uns_emissionProbabilitiesMap = (HashMap<String, HashMap<String, Float>>) uns_emissionProbabilitiesMap.clone();
+        this.uns_emissionProbabilitiesMap = (HashMap<String, HashMap<String, Float>>) emissionProbabilitiesMap.clone();
 
         Parse.parseTrainFile(fileName, unt_sentences);
     }
@@ -81,7 +81,7 @@ public class Smoother {
         this.uns_suffixCountMap = (HashMap<String, Float>) uns_suffixCountMap.clone();
         this.uns_bigramTransmissionPairMap = (HashMap<String, HashMap<String, Float>>) uns_bigramTransmissionPairMap.clone();
         this.uns_trigramCountMap = (HashMap<Trigram, Float>) uns_trigramCountMap.clone();
-        this.uns_emissionProbabilitiesMap = (HashMap<String, HashMap<String, Float>>) uns_emissionProbabilitiesMap.clone();
+        this.uns_emissionProbabilitiesMap = (HashMap<String, HashMap<String, Float>>) emissionProbabilitiesMap.clone();
 
     }
 
@@ -97,7 +97,7 @@ public class Smoother {
         this.uns_suffixCountMap = (HashMap<String, Float>) uns_suffixCountMap.clone();
         this.uns_bigramTransmissionPairMap = (HashMap<String, HashMap<String, Float>>) uns_bigramTransmissionPairMap.clone();
         this.uns_trigramCountMap = (HashMap<Trigram, Float>) uns_trigramCountMap.clone();
-        this.uns_emissionProbabilitiesMap = (HashMap<String, HashMap<String, Float>>) uns_emissionProbabilitiesMap.clone();
+        this.uns_emissionProbabilitiesMap = (HashMap<String, HashMap<String, Float>>) emissionProbabilitiesMap.clone();
 
         Parse.parseTrainFile(fileName, unt_sentences);
     }
@@ -261,6 +261,8 @@ public class Smoother {
     }
 
     public void kneserNeySmooothing(){
+        calculateTagProbabilities();
+        countUnseenSuffixesForTestCorpus();
         calculateKneserNey_D_forBigram();
         calculateKneserNey_D_forTrigram();
         calculateKneserNey_bigramTransmissionProbabilities();
@@ -314,9 +316,9 @@ public class Smoother {
         float knProb = 0f;
         for (String t1 : PartOfSpeech.tag_list){
             float unigramCount = uns_tagCountMap.get(t1);
+            HashMap<String, Float> t_prob = new HashMap<>();
             if (unigramCount != 0){
                 for (String t2 : PartOfSpeech.tag_list){
-                    HashMap<String, Float> t_prob = new HashMap<>();
                     Bigram<String, String> tags = new Bigram<>(t1, t2);
                     float bigramCount = uns_bigramCountMap.get(tags);
                     knBase = Math.max((bigramCount-kneserNey_D_bigram), 0) / unigramCount;
@@ -324,8 +326,8 @@ public class Smoother {
                     conti = getContinuationForBigram(t2);
                     knProb = knBase + inte * conti;
                     t_prob.put(t2, knProb);
-                    kneserNey_bigramTransmissionProbabilityMap.put(t1, t_prob);
                 }
+                kneserNey_bigramTransmissionProbabilityMap.put(t1, t_prob);
             } else {
                 /**
                  * Problem ??
@@ -345,32 +347,32 @@ public class Smoother {
                 Bigram<String, String> firstTwo = new Bigram<>(t1, t2);
                 float biagramCount = uns_bigramCountMap.get(firstTwo);
                 if (biagramCount != 0) {
+                    HashMap<String, Float> t_prob = new HashMap<>();
                     for (String t3 : PartOfSpeech.tag_list) {
                         Trigram<String, String, String> tags = new Trigram<>(t1, t2, t3);
                         float trigramCount = uns_trigramCountMap.get(tags);
                         float ratio = trigramCount / biagramCount;
                         float c_kn = kneserNey_bigramTransmissionProbabilityMap.get(t1).get(t2) * uns_tagCountMap.get(t1);
-                        HashMap<String, Float> t_prob = new HashMap<>();
                         knBase = Math.max((c_kn * ratio)-kneserNey_D_trigram, 0) / c_kn;
                         inte = getGamaForTrigram(t1, t2) * c_kn;
                         HashMap<String, Float> t_p = kneserNey_bigramTransmissionProbabilityMap.get(t2);
                         conti = t_p.get(t3);
                         knProb = knBase + inte * conti;
                         t_prob.put(t3, knProb);
-                        kneserNey_trigramTransmissionProbabilityMap.put(firstTwo, t_prob);
                     }
+                    kneserNey_trigramTransmissionProbabilityMap.put(firstTwo, t_prob);
                 } else {
+                    HashMap<String, Float> t_prob = new HashMap<>();
                     for (String t3 : PartOfSpeech.tag_list) {
                         float c_kn = kneserNey_bigramTransmissionProbabilityMap.get(t1).get(t2) * uns_tagCountMap.get(t1);
-                        HashMap<String, Float> t_prob = new HashMap<>();
                         knBase = 0;
                         inte = getGamaForTrigram(t1, t2) * c_kn;
                         HashMap<String, Float> t_p = kneserNey_bigramTransmissionProbabilityMap.get(t2);
                         conti = t_p.get(t3);
                         knProb = knBase + inte * conti;
                         t_prob.put(t3, knProb);
-                        kneserNey_trigramTransmissionProbabilityMap.put(firstTwo, t_prob);
                     }
+                    kneserNey_trigramTransmissionProbabilityMap.put(firstTwo, t_prob);
                 }
             }
         }
@@ -406,15 +408,19 @@ public class Smoother {
 
     // Hızlandırmak için trigram count'larıdaki sıfırlar silinebilinir.
     public float getGamaForTrigram(String t1, String t2) {
-        int count = 0;
-        for (String t3 : PartOfSpeech.tag_list){
-            Trigram trigram = new Trigram(t1, t2, t3);
-            if (uns_trigramCountMap.get(trigram) != 0){
-                count++;
-            }
-        }
         Bigram biagram = new Bigram(t1, t2);
-        return ((float)kneserNey_D_trigram * count) / uns_bigramCountMap.get(biagram);
+        if (uns_bigramCountMap.get(biagram) == 0){
+            return 1f;
+        } else {
+            int count = 0;
+            for (String t3 : PartOfSpeech.tag_list){
+                Trigram trigram = new Trigram(t1, t2, t3);
+                if (uns_trigramCountMap.get(trigram) != 0){
+                    count++;
+                }
+            }
+            return ((float)kneserNey_D_trigram * count) / uns_bigramCountMap.get(biagram);
+        }
     }
 
     public float getContinuationForTrigram(String t2, String t3) {
@@ -435,10 +441,10 @@ public class Smoother {
     }
 
     public void calculateTagProbabilities(){
-        int totalStartPoint = 0;
+        float totalStartPoint = 0;
         Iterator it = uns_tagCountMap.values().iterator();
         while (it.hasNext()){
-            totalStartPoint = totalStartPoint + (Integer) it.next();
+            totalStartPoint = totalStartPoint + (float) it.next();
         }
 
         for (String s : PartOfSpeech.tag_list){
@@ -451,34 +457,20 @@ public class Smoother {
     }
 
     public void calculateKneserNeyEmissionProbabilities(){
-        laplace_suffixCountMap = (HashMap<String, Float>) uns_suffixCountMap.clone();
-        for (String unseenSuffix : unseenSuffixList){
-            laplace_suffixCountMap.put(unseenSuffix, 0f);
-        }
-
         for (String s : PartOfSpeech.tag_list){
             if (uns_emissionProbabilitiesMap.containsKey(s)){
                 HashMap<String, Float> emitteds = uns_emissionProbabilitiesMap.get(s);
-                HashMap<String, Float> t_prob = new HashMap<String, Float>();
-                Iterator it = laplace_suffixCountMap.keySet().iterator();
-                while (it.hasNext()){
-                    String obs = (String)it.next();
-                    if (!emitteds.containsKey(obs)){
-                    } else {
-                        t_prob.put(obs, uns_tagProbabilitiesMap.get(s));
-                    }
-                    uns_emissionProbabilitiesMap.put(s, t_prob);
+                for (String unseenSuffix : unseenSuffixList){
+                    emitteds.put(unseenSuffix, uns_tagProbabilitiesMap.get(s));
                 }
+                kneserNey_emissionProbabilitiesMap.put(s, emitteds);
             } else {
-                HashMap<String, Float> t_prob = new HashMap<String, Float>();
-                Iterator it = laplace_suffixCountMap.keySet().iterator();
-                while (it.hasNext()){
-                    String obs = (String)it.next();
-                    t_prob.put(obs, uns_tagProbabilitiesMap.get(s));
-                    uns_emissionProbabilitiesMap.put(s, t_prob);
+                HashMap<String, Float> e_prob = new HashMap<String, Float>();
+                for (String unseenSuffix : unseenSuffixList){
+                    e_prob.put(unseenSuffix, uns_tagProbabilitiesMap.get(s));
                 }
+                kneserNey_emissionProbabilitiesMap.put(s, e_prob);
             }
-
         }
     }
 
