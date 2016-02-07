@@ -39,20 +39,26 @@ public class Tagger {
         Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/test_set_middle_metu_ink", my_POS_tag_count, my_bigramCountMap, my_transmission_pair_count,
                 my_obs_count, my_trigramTransmissionPairMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
-        smoother.addOne(3);
+        //smoother.addOne(3);
+        smoother.kneserNeySmooothing();
 
         ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
         HashMap<String, Float> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
         HashMap<String, HashMap<String, Float>> my_s_emission_pair_count = smoother.getLaplace_emissionPairMap();
         HashMap<String, HashMap<String, Float>> my_s_emission_prob = smoother.getLaplace_emissionProbabilitiesMap();
         HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap = smoother.getLaplace_trigramTransmissionProbabilityMap();
+
+        HashMap<String, HashMap<String, Float>> my_s_transition_prob_kn = smoother.getKneserNey_bigramTransmissionProbabilityMap();
+        HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap_kn = smoother.getKneserNey_trigramTransmissionProbabilityMap();
+        HashMap<String, HashMap<String, Float>> my_s_emission_prob_kn = smoother.getKneserNey_emissionProbabilitiesMap();
+
         ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
         ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
         ArrayList<ArrayList<String>> generated_sentences_Tags_2 = new ArrayList<>();
 
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_trigramProbabilityMap,  my_s_emission_prob);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_kn, my_s_trigramProbabilityMap_kn,  my_s_emission_prob_kn);
             generated_sentences_Tags.add(generatedTags);
         }
 

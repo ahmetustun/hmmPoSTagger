@@ -144,8 +144,21 @@ public class Smoother {
         return laplace_emissionProbabilitiesMap;
     }
 
+    public HashMap<String, HashMap<String, Float>> getKneserNey_bigramTransmissionProbabilityMap() {
+        return kneserNey_bigramTransmissionProbabilityMap;
+    }
+
+    public HashMap<Bigram<String, String>, HashMap<String, Float>> getKneserNey_trigramTransmissionProbabilityMap() {
+        return kneserNey_trigramTransmissionProbabilityMap;
+    }
+
+    public HashMap<String, HashMap<String, Float>> getKneserNey_emissionProbabilitiesMap() {
+        return kneserNey_emissionProbabilitiesMap;
+    }
+
     public HashMap<String, HashMap<String, Float>> getLaplace_emissionPairMap() {
         return laplace_emissionPairMap;
+
     }
 
     public HashMap<String, Float> getLaplace_suffixCountMap() {
@@ -247,6 +260,14 @@ public class Smoother {
         }
     }
 
+    public void kneserNeySmooothing(){
+        calculateKneserNey_D_forBigram();
+        calculateKneserNey_D_forTrigram();
+        calculateKneserNey_bigramTransmissionProbabilities();
+        calculateKneserNey_trigramTransmissionProbabilities();
+        calculateKneserNeyEmissionProbabilities();
+    }
+
     public void calculateKneserNey_D_forTrigram(){
         float n1 = 0f;
         float n2 = 0f;
@@ -276,7 +297,7 @@ public class Smoother {
 
         Iterator it = uns_bigramCountMap.values().iterator();
         while (it.hasNext()){
-            int number = (int) it.next();
+            float number = (float) it.next();
             if (number == 1){
                 n1++;
             } else if (number == 2){
@@ -287,69 +308,69 @@ public class Smoother {
     }
 
     public void calculateKneserNey_bigramTransmissionProbabilities(){
-
+        float knBase = 0f;
+        float inte = 0f;
+        float conti = 0f;
+        float knProb = 0f;
         for (String t1 : PartOfSpeech.tag_list){
-            if (uns_bigramTransmissionPairMap.containsKey(t1)){
-                HashMap<String, Float> t_count = uns_bigramTransmissionPairMap.get(t1);
+            float unigramCount = uns_tagCountMap.get(t1);
+            if (unigramCount != 0){
                 for (String t2 : PartOfSpeech.tag_list){
-                    float knBase = 0f;
-                    float inte = 0f;
-                    float conti = 0f;
-                    float knProb = 0f;
                     HashMap<String, Float> t_prob = new HashMap<>();
-                    if (t_count.containsKey(t2)){
-                        knBase = Math.max((t_count.get(t2)-kneserNey_D_bigram), 0) / uns_tagCountMap.get(t1);
-                        inte = getGamaForBigram(t1);
-                        conti = getContinuationForBigram(t2);
-                        knProb = knBase + inte * conti;
-                        t_prob.put(t2, knProb);
-                    } else {
-                        inte = getGamaForBigram(t1);
-                        conti = getContinuationForBigram(t2);
-                        knProb = inte * conti;
-                        t_prob.put(t2, knProb);
-                    }
+                    Bigram<String, String> tags = new Bigram<>(t1, t2);
+                    float bigramCount = uns_bigramCountMap.get(tags);
+                    knBase = Math.max((bigramCount-kneserNey_D_bigram), 0) / unigramCount;
+                    inte = getGamaForBigram(t1);
+                    conti = getContinuationForBigram(t2);
+                    knProb = knBase + inte * conti;
+                    t_prob.put(t2, knProb);
                     kneserNey_bigramTransmissionProbabilityMap.put(t1, t_prob);
                 }
             } else {
                 /**
                  * Problem ??
                  */
+                System.out.println(t1 + " not found in train set");
             }
         }
     }
 
     public void calculateKneserNey_trigramTransmissionProbabilities(){
-
+        float knBase = 0f;
+        float inte = 0f;
+        float conti = 0f;
+        float knProb = 0f;
         for (String t1 : PartOfSpeech.tag_list){
             for (String t2 : PartOfSpeech.tag_list) {
                 Bigram<String, String> firstTwo = new Bigram<>(t1, t2);
-                HashMap<String, Float> t_count = uns_trigramTransmissionPairMap.get(firstTwo);
-                if (uns_trigramTransmissionPairMap.containsKey(firstTwo)) {
+                float biagramCount = uns_bigramCountMap.get(firstTwo);
+                if (biagramCount != 0) {
                     for (String t3 : PartOfSpeech.tag_list) {
-                        float knBase = 0f;
-                        float inte = 0f;
-                        float conti = 0f;
-                        float knProb = 0f;
+                        Trigram<String, String, String> tags = new Trigram<>(t1, t2, t3);
+                        float trigramCount = uns_trigramCountMap.get(tags);
+                        float ratio = trigramCount / biagramCount;
+                        float c_kn = kneserNey_bigramTransmissionProbabilityMap.get(t1).get(t2) * uns_tagCountMap.get(t1);
                         HashMap<String, Float> t_prob = new HashMap<>();
-                        if (t_count.containsKey(t3)){
-                            knBase = Math.max(t_count.get(t3)-kneserNey_D_trigram, 0) / uns_bigramCountMap.get(firstTwo);
-                            inte = getGamaForTrigram(t1, t2);
-                            conti = getContinuationForTrigram(t2, t3);
-                            knProb = knBase + inte * conti;
-                            t_prob.put(t3, knProb);
-                        } else {
-                            inte = getGamaForTrigram(t1, t2);
-                            conti = getContinuationForTrigram(t2, t3);
-                            knProb = inte * conti;
-                            t_prob.put(t3, knProb);
-                        }
+                        knBase = Math.max((c_kn * ratio)-kneserNey_D_trigram, 0) / c_kn;
+                        inte = getGamaForTrigram(t1, t2) * c_kn;
+                        HashMap<String, Float> t_p = kneserNey_bigramTransmissionProbabilityMap.get(t2);
+                        conti = t_p.get(t3);
+                        knProb = knBase + inte * conti;
+                        t_prob.put(t3, knProb);
                         kneserNey_trigramTransmissionProbabilityMap.put(firstTwo, t_prob);
                     }
                 } else {
-                    /**
-                     *  Problem ??
-                     */
+                    for (String t3 : PartOfSpeech.tag_list) {
+                        float c_kn = kneserNey_bigramTransmissionProbabilityMap.get(t1).get(t2) * uns_tagCountMap.get(t1);
+                        HashMap<String, Float> t_prob = new HashMap<>();
+                        knBase = 0;
+                        inte = getGamaForTrigram(t1, t2) * c_kn;
+                        HashMap<String, Float> t_p = kneserNey_bigramTransmissionProbabilityMap.get(t2);
+                        conti = t_p.get(t3);
+                        knProb = knBase + inte * conti;
+                        t_prob.put(t3, knProb);
+                        kneserNey_trigramTransmissionProbabilityMap.put(firstTwo, t_prob);
+                    }
                 }
             }
         }
