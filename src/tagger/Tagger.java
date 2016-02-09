@@ -36,7 +36,7 @@ public class Tagger {
         HashMap<Bigram<String, String>, HashMap<String, Float>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
 
-        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/metusabancı_test_ig", my_POS_tag_count, my_bigramCountMap, my_transmission_pair_count,
+        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/metusabancı_test_ig_2", my_POS_tag_count, my_bigramCountMap, my_transmission_pair_count,
                 my_obs_count, my_trigramTransmissionPairMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
         //smoother.addOne(3);
@@ -73,7 +73,7 @@ public class Tagger {
         }
 */
 
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/metusabancı_tagged_test_ig", generated_sentences_Tags);
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/metusabancı_tagged_test_ig_2", generated_sentences_Tags);
         float my_score = scorer.getScore();
 
         System.out.println("\n" + my_score);

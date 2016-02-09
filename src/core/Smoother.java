@@ -46,8 +46,8 @@ public class Smoother {
 
     private HashMap<String, HashMap<String, Float>> interpolation_emissionProbabilitiesMap = new HashMap<>();
 
-    float kneserNey_D_bigram = 0f;
-    float kneserNey_D_trigram = 0f;
+    float kneserNey_D_bigram = 0.6f;
+    float kneserNey_D_trigram = 0.6f;
     float additiveNumber = 0.5f;
     float interpolationBeta = 0.2f;
 
@@ -239,14 +239,14 @@ public class Smoother {
                 if (uns_trigramTransmissionPairMap.containsKey(bigram)){
                     t_count = uns_trigramTransmissionPairMap.get(bigram);
                 }
-                float denominator = uns_bigramCountMap.get(bigram) + 12f;
+                float denominator = uns_bigramCountMap.get(bigram) + 12*additiveNumber;
                 HashMap<String, Float> t_prob = new HashMap<>();
                 for (String tag : PartOfSpeech.tag_list){
                     float numerator = 0f;
                     if (t_count.containsKey(tag)){
-                        numerator = (float)(t_count.get(tag) + 1f);
+                        numerator = (float)(t_count.get(tag) + additiveNumber);
                     } else {
-                        numerator = 1f;
+                        numerator = additiveNumber;
                     }
                     t_prob.put(tag, numerator/denominator);
                 }
