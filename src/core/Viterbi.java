@@ -141,7 +141,7 @@ public class Viterbi
                                                              HashMap<String, HashMap<String, Float>> emit_p){
         ArrayList<String> statesList = new ArrayList<>();
 
-        String first = "";
+        String first = "Noun";
         float max_p = 0f;
         for (String next : states){
             HashMap<String, Float> e_m = emit_p.get(next);
@@ -160,7 +160,7 @@ public class Viterbi
         statesList.add(first);
 
         String curr = first;
-        String next_tag = "";
+        String next_tag = "Noun";
         for (int i=1; i<obs.length; i++){
 
             float max_prob = 0f;
@@ -208,7 +208,7 @@ public class Viterbi
            Bigram<String, String> bigram = new Bigram<>(first, second);
 
            float max_p = 0f;
-           String next_tag = "";
+           String next_tag = "Noun";
            for (String next : states){
                HashMap<String, Float> e_m = emit_p.get(next);
                float e = e_m.get(obs[i]);
