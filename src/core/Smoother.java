@@ -45,10 +45,12 @@ public class Smoother {
     private HashMap<String, HashMap<String, Float>> kneserNey_emissionProbabilitiesMap = new HashMap<>();
 
     private HashMap<String, HashMap<String, Float>> interpolation_emissionProbabilitiesMap = new HashMap<>();
+    private HashMap<String, HashMap<String, Float>>  interpolation_bigramTransmissionProbabilityMap = new HashMap<>();
+    private HashMap<Bigram<String, String>, HashMap<String, Float>> interpolation_trigramTransmissionProbabilityMap = new HashMap<>();
 
     float kneserNey_D_bigram = 0.6f;
     float kneserNey_D_trigram = 0.6f;
-    float additiveNumber = 0.5f;
+    float additiveNumber = 0.4f;
     float interpolationBeta = 0.2f;
 
     public Smoother(HashMap<String, Float> uns_tagCountMap, HashMap<String, Float> uns_suffixCountMap, HashMap<String, HashMap<String, Float>> uns_bigramTransmissionPairMap,
@@ -134,6 +136,14 @@ public class Smoother {
 
     public HashMap<Bigram<String, String>, HashMap<String, Float>> getLaplace_trigramTransmissionProbabilityMap() {
         return laplace_trigramTransmissionProbabilityMap;
+    }
+
+    public HashMap<String, HashMap<String, Float>> getInterpolation_bigramTransmissionProbabilityMap() {
+        return interpolation_bigramTransmissionProbabilityMap;
+    }
+
+    public HashMap<Bigram<String, String>, HashMap<String, Float>> getInterpolation_trigramTransmissionProbabilityMap() {
+        return interpolation_trigramTransmissionProbabilityMap;
     }
 
     public ArrayList<ArrayList<String>> getUnTaggedSuffixesList() {
@@ -273,9 +283,9 @@ public class Smoother {
         tagRatioBasedEmission();
         calculateKneserNey_D_forBigram();
         calculateKneserNey_D_forTrigram();
-        //calculateKneserNey_bigramTransmissionProbabilities();
-        //calculateKneserNey_trigramTransmissionProbabilities();
-        addOneForTrigramTransmission();
+        calculateKneserNey_bigramTransmissionProbabilities();
+        calculateKneserNey_trigramTransmissionProbabilities();
+        //addOneForTrigramTransmission();
     }
 
     public void tagRatioBasedEmission() {
@@ -285,16 +295,25 @@ public class Smoother {
     }
 
     public void interpolationBasedEmission() {
+        calculateTagProbabilities();
         countUnseenSuffixesForTestCorpus();
         interpolationForEmission();
     }
 
-    public void interpolationSmooting() {
+    public void interpolationForBoth() {
         interpolationBasedEmission();
-        calculateKneserNey_D_forBigram();
-        calculateKneserNey_D_forTrigram();
-        calculateKneserNey_bigramTransmissionProbabilities();
-        calculateKneserNey_trigramTransmissionProbabilities();
+        //calculateKneserNey_D_forBigram();
+        //calculateKneserNey_D_forTrigram();
+        //calculateKneserNey_bigramTransmissionProbabilities();
+        //calculateKneserNey_trigramTransmissionProbabilities();
+        interpolationForBiagram();
+        interpolationForTrigram();
+    }
+
+    public void interpolationSmoothingForTransitionWithTagRatioEmission(){
+        tagRatioBasedEmission();
+        interpolationForBiagram();
+        interpolationForTrigram();
     }
 
     public void calculateKneserNey_D_forTrigram(){
@@ -530,4 +549,65 @@ public class Smoother {
             }
     }
 
+    public void interpolationForBiagram(){
+        float lambda = 0.9f;
+
+        for (String t1 : PartOfSpeech.tag_list){
+            if (uns_bigramTransmissionPairMap.containsKey(t1)){
+                HashMap<String, Float> uns_t_prob = uns_bigramTransmissionPairMap.get(t1);
+                HashMap<String, Float> t_prob = new HashMap<String, Float>();
+                for (String t2 : PartOfSpeech.tag_list){
+                    float ratio = 0f;
+                    if (uns_t_prob.containsKey(t2)){
+                        ratio = lambda * uns_t_prob.get(t2) + (1f - lambda) * uns_tagProbabilitiesMap.get(t2);
+                    } else {
+                        ratio = lambda * uns_tagProbabilitiesMap.get(t2);
+                    }
+                    t_prob.put(t2, ratio);
+                }
+                interpolation_bigramTransmissionProbabilityMap.put(t1, t_prob);
+            } else {
+                HashMap<String, Float> t_prob = new HashMap<String, Float>();
+                for (String t2 : PartOfSpeech.tag_list){
+                    float ratio = lambda * uns_tagProbabilitiesMap.get(t2);
+                    t_prob.put(t2, ratio);
+                }
+                interpolation_bigramTransmissionProbabilityMap.put(t1, t_prob);
+            }
+        }
+    }
+
+    public void interpolationForTrigram() {
+        float lambda_1 = 0.6f;
+        float lambda_2 = 0.3f;
+        float lambda_3 = 0.1f;
+
+        for (String t1 : PartOfSpeech.tag_list){
+            for (String t2 : PartOfSpeech.tag_list){
+                Bigram<String, String> bigram = new Bigram<>(t1, t2);
+                float biagramCount = uns_bigramCountMap.get(bigram);
+                if (biagramCount != 0) {
+                    HashMap<String, Float> uns_t_prob = uns_trigramTransmissionPairMap.get(bigram);
+                    HashMap<String, Float> t_prob = new HashMap<String, Float>();
+                    for (String t3 : PartOfSpeech.tag_list){
+                        float ratio = 0f;
+                        if (uns_t_prob.containsKey(t3)){
+                            ratio = lambda_1 * uns_t_prob.get(t3) + lambda_2 * interpolation_bigramTransmissionProbabilityMap.get(t2).get(t3) + lambda_3 * uns_tagProbabilitiesMap.get(t3);
+                        } else {
+                            ratio = lambda_2 * interpolation_bigramTransmissionProbabilityMap.get(t2).get(t3) + lambda_3 * uns_tagProbabilitiesMap.get(t3);
+                        }
+                        t_prob.put(t3, ratio);
+                    }
+                    interpolation_trigramTransmissionProbabilityMap.put(bigram, t_prob);
+                } else {
+                    HashMap<String, Float> t_prob = new HashMap<String, Float>();
+                    for (String t3 : PartOfSpeech.tag_list){
+                        float ratio = ratio = lambda_2 * interpolation_bigramTransmissionProbabilityMap.get(t2).get(t3) + lambda_3 * uns_tagProbabilitiesMap.get(t3);
+                        t_prob.put(t3, ratio);
+                    }
+                    interpolation_trigramTransmissionProbabilityMap.put(bigram, t_prob);
+                }
+            }
+        }
+    }
 }

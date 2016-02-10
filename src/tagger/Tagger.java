@@ -27,7 +27,7 @@ public class Tagger {
         HashMap<String, HashMap<String, Float>> my_transmission_pair_count = trainer.getBigramTransmissionPairMap();
         HashMap<String, HashMap<String, Float>> my_emission_pair_count = trainer.getEmissionPairMap();
         HashMap<String, Float> my_start_prob = trainer.getStartProbabilitiesMap();
-        HashMap<String, HashMap<String, Float>> my_transmission_prob = trainer.getBigramTransmissionProbabilitiesMap();
+        HashMap<String, HashMap<String, Float>> my_s_transmission_prob = trainer.getBigramTransmissionProbabilitiesMap();
         HashMap<String, HashMap<String, Float>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
         HashMap<Trigram<String, String, String>, Float> my_trigram = trainer.getTrigramCountMap();
 
@@ -40,8 +40,9 @@ public class Tagger {
                 my_obs_count, my_trigramTransmissionPairMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
         //smoother.addOne(3);
-        smoother.kneserNeySmooothing();
-        //smoother.interpolationSmooting();
+        //smoother.kneserNeySmooothing();
+        //smoother.interpolationForBoth();
+        smoother.interpolationSmoothingForTransitionWithTagRatioEmission();
 
         ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
         HashMap<String, Float> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
@@ -54,6 +55,8 @@ public class Tagger {
         HashMap<String, HashMap<String, Float>> my_s_emission_prob_kn = smoother.getKneserNey_emissionProbabilitiesMap();
 
         HashMap<String, HashMap<String, Float>> my_s_emission_prob_i = smoother.getInterpolation_emissionProbabilitiesMap();
+        HashMap<String, HashMap<String, Float>> my_s_transition_prob_i = smoother.getInterpolation_bigramTransmissionProbabilityMap();
+        HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap_i = smoother.getInterpolation_trigramTransmissionProbabilityMap();
 
         ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
         ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
@@ -61,7 +64,7 @@ public class Tagger {
 
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_trigramProbabilityMap,  my_s_emission_prob_kn);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_i, my_s_trigramProbabilityMap_i,  my_s_emission_prob_kn);
             generated_sentences_Tags.add(generatedTags);
         }
 
