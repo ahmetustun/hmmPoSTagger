@@ -273,8 +273,9 @@ public class Smoother {
         tagRatioBasedEmission();
         calculateKneserNey_D_forBigram();
         calculateKneserNey_D_forTrigram();
-        calculateKneserNey_bigramTransmissionProbabilities();
-        calculateKneserNey_trigramTransmissionProbabilities();
+        //calculateKneserNey_bigramTransmissionProbabilities();
+        //calculateKneserNey_trigramTransmissionProbabilities();
+        addOneForTrigramTransmission();
     }
 
     public void tagRatioBasedEmission() {

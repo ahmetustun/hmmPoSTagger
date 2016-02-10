@@ -61,7 +61,7 @@ public class Tagger {
 
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_kn, my_s_trigramProbabilityMap_kn,  my_s_emission_prob_kn);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_trigramProbabilityMap,  my_s_emission_prob_kn);
             generated_sentences_Tags.add(generatedTags);
         }
 
