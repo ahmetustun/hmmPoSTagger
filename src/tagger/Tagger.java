@@ -18,7 +18,7 @@ public class Tagger {
 
     public static void main(String[] args) {
 
-        Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/metusabancı_train_ig");
+        Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/train_middle_metu_ink");
         trainer.analyse(3);
 
         HashMap<String, Float> my_start_count = trainer.getStartCountMap();
@@ -27,7 +27,7 @@ public class Tagger {
         HashMap<String, HashMap<String, Float>> my_transmission_pair_count = trainer.getBigramTransmissionPairMap();
         HashMap<String, HashMap<String, Float>> my_emission_pair_count = trainer.getEmissionPairMap();
         HashMap<String, Float> my_start_prob = trainer.getStartProbabilitiesMap();
-        HashMap<String, HashMap<String, Float>> my_s_transmission_prob = trainer.getBigramTransmissionProbabilitiesMap();
+        HashMap<String, HashMap<String, Float>> my_s_transition_prob_a = trainer.getBigramTransmissionProbabilitiesMap();
         HashMap<String, HashMap<String, Float>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
         HashMap<Trigram<String, String, String>, Float> my_trigram = trainer.getTrigramCountMap();
 
@@ -36,7 +36,7 @@ public class Tagger {
         HashMap<Bigram<String, String>, HashMap<String, Float>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
 
-        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/metusabancı_test_ig_2", my_POS_tag_count, my_bigramCountMap, my_transmission_pair_count,
+        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/test_middle_metu_ink", my_POS_tag_count, my_bigramCountMap, my_transmission_pair_count,
                 my_obs_count, my_trigramTransmissionPairMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
         //smoother.addOne(3);
@@ -47,8 +47,8 @@ public class Tagger {
         ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
         HashMap<String, Float> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
         HashMap<String, HashMap<String, Float>> my_s_emission_pair_count = smoother.getLaplace_emissionPairMap();
-        HashMap<String, HashMap<String, Float>> my_s_emission_prob = smoother.getLaplace_emissionProbabilitiesMap();
-        HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap = smoother.getLaplace_trigramTransmissionProbabilityMap();
+        HashMap<String, HashMap<String, Float>> my_s_emission_prob_a = smoother.getLaplace_emissionProbabilitiesMap();
+        HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap_a = smoother.getLaplace_trigramTransmissionProbabilityMap();
 
         HashMap<String, HashMap<String, Float>> my_s_transition_prob_kn = smoother.getKneserNey_bigramTransmissionProbabilityMap();
         HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap_kn = smoother.getKneserNey_trigramTransmissionProbabilityMap();
@@ -76,7 +76,7 @@ public class Tagger {
         }
 */
 
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/metusabancı_tagged_test_ig_2", generated_sentences_Tags);
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/tagged_test_middle_metu_ink", generated_sentences_Tags);
         float my_score = scorer.getScore();
 
         System.out.println("\n" + my_score);
