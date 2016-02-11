@@ -13,7 +13,7 @@ public class Scorer {
     ArrayList<ArrayList<String>> originalTagList = new ArrayList<>();
     ArrayList<ArrayList<String>> generatedTagList = new ArrayList<>();
 
-    float score;
+    double score;
 
     public Scorer(String fileName, ArrayList<ArrayList<String>> generatedTagList){
         this.generatedTagList = (ArrayList<ArrayList<String>>) generatedTagList.clone();
@@ -46,7 +46,7 @@ public class Scorer {
         }
     }
 
-    public float getScore(){
+    public double getScore(){
 
         countOriginalTagsForSentences();
 
@@ -75,6 +75,6 @@ public class Scorer {
             }
         }
 
-        return score = (float)correct/total;
+        return score = (double)correct/total;
     }
 }

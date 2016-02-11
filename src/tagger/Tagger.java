@@ -21,42 +21,43 @@ public class Tagger {
         Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/metusabancı_train_ig");
         trainer.analyse(3);
 
-        HashMap<String, Float> my_start_count = trainer.getStartCountMap();
-        HashMap<String, Float> my_POS_tag_count = trainer.getTagCountMap();
-        HashMap<String, Float> my_obs_count = trainer.getSuffixCountMap();
-        HashMap<String, HashMap<String, Float>> my_transmission_pair_count = trainer.getBigramTransmissionPairMap();
-        HashMap<String, HashMap<String, Float>> my_emission_pair_count = trainer.getEmissionPairMap();
-        HashMap<String, Float> my_start_prob = trainer.getStartProbabilitiesMap();
-        HashMap<String, HashMap<String, Float>> my_transition_prob = trainer.getBigramTransmissionProbabilitiesMap();
-        HashMap<String, HashMap<String, Float>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
-        HashMap<Trigram<String, String, String>, Float> my_trigram = trainer.getTrigramCountMap();
+        HashMap<String, Double> my_start_count = trainer.getStartCountMap();
+        HashMap<String, Double> my_POS_tag_count = trainer.getTagCountMap();
+        HashMap<String, Double> my_obs_count = trainer.getSuffixCountMap();
+        HashMap<String, HashMap<String, Double>> my_transmission_pair_count = trainer.getBigramTransmissionPairMap();
+        HashMap<String, HashMap<String, Double>> my_emission_pair_count = trainer.getEmissionPairMap();
+        HashMap<String, Double> my_start_prob = trainer.getStartProbabilitiesMap();
+        HashMap<String, HashMap<String, Double>> my_transition_prob = trainer.getBigramTransmissionProbabilitiesMap();
+        HashMap<String, HashMap<String, Double>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
+        HashMap<Trigram<String, String, String>, Double> my_trigram = trainer.getTrigramCountMap();
 
-        HashMap<Bigram<String, String>, Float> my_bigramCountMap = trainer.getBigramCountMap();
-        HashMap<Bigram<String, String>, HashMap<String, Float>> my_trigramTransmissionPairMap = trainer.getTrigramTransmissionPairMap();
-        HashMap<Bigram<String, String>, HashMap<String, Float>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
+        HashMap<Bigram<String, String>, Double> my_bigramCountMap = trainer.getBigramCountMap();
+        HashMap<Bigram<String, String>, HashMap<String, Double>> my_trigramTransmissionPairMap = trainer.getTrigramTransmissionPairMap();
+        HashMap<Bigram<String, String>, HashMap<String, Double>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
 
-        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/metusabancı_test_ig", my_POS_tag_count, my_bigramCountMap, my_transition_prob,
+        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/metusabancı_test_ig_2", my_POS_tag_count, my_bigramCountMap, my_transition_prob,
                 my_obs_count, my_trigramTransmissionPairMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
         //smoother.addOne(3);
         //smoother.kneserNeySmooothing();
         //smoother.interpolationForBoth();
         smoother.interpolationSmoothingForTransitionWithTagRatioEmission();
+        //smoother.tagRatioBasedEmission();
 
         ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
-        HashMap<String, Float> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
-        HashMap<String, HashMap<String, Float>> my_s_emission_pair_count = smoother.getLaplace_emissionPairMap();
-        HashMap<String, HashMap<String, Float>> my_s_emission_prob_a = smoother.getLaplace_emissionProbabilitiesMap();
-        HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap_a = smoother.getLaplace_trigramTransmissionProbabilityMap();
+        HashMap<String, Double> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
+        HashMap<String, HashMap<String, Double>> my_s_emission_pair_count = smoother.getLaplace_emissionPairMap();
+        HashMap<String, HashMap<String, Double>> my_s_emission_prob_a = smoother.getLaplace_emissionProbabilitiesMap();
+        HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_a = smoother.getLaplace_trigramTransmissionProbabilityMap();
 
-        HashMap<String, HashMap<String, Float>> my_s_transition_prob_kn = smoother.getKneserNey_bigramTransmissionProbabilityMap();
-        HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap_kn = smoother.getKneserNey_trigramTransmissionProbabilityMap();
-        HashMap<String, HashMap<String, Float>> my_s_emission_prob_kn = smoother.getKneserNey_emissionProbabilitiesMap();
+        HashMap<String, HashMap<String, Double>> my_s_transition_prob_kn = smoother.getKneserNey_bigramTransmissionProbabilityMap();
+        HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_kn = smoother.getKneserNey_trigramTransmissionProbabilityMap();
+        HashMap<String, HashMap<String, Double>> my_s_emission_prob_kn = smoother.getKneserNey_emissionProbabilitiesMap();
 
-        HashMap<String, HashMap<String, Float>> my_s_emission_prob_i = smoother.getInterpolation_emissionProbabilitiesMap();
-        HashMap<String, HashMap<String, Float>> my_s_transition_prob_i = smoother.getInterpolation_bigramTransmissionProbabilityMap();
-        HashMap<Bigram<String, String>, HashMap<String, Float>> my_s_trigramProbabilityMap_i = smoother.getInterpolation_trigramTransmissionProbabilityMap();
+        HashMap<String, HashMap<String, Double>> my_s_emission_prob_i = smoother.getInterpolation_emissionProbabilitiesMap();
+        HashMap<String, HashMap<String, Double>> my_s_transition_prob_i = smoother.getInterpolation_bigramTransmissionProbabilityMap();
+        HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_i = smoother.getInterpolation_trigramTransmissionProbabilityMap();
 
         ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
         ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
@@ -75,8 +76,8 @@ public class Tagger {
             generated_sentences_Tags.add(generatedTags);
         }
 
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/metusabancı_tagged_test_ig", generated_sentences_Tags);
-        float my_score = scorer.getScore();
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/metusabancı_tagged_test_ig_2", generated_sentences_Tags);
+        double my_score = scorer.getScore();
 
         System.out.println("\n" + my_score);
         System.out.println("Tamamlandı");
