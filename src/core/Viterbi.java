@@ -10,69 +10,73 @@ import java.util.HashMap;
 
 public class Viterbi
 {
-     static final String HEALTHY = "Healthy";
-        static final String FEVER = "Fever";
+     static final String H = "H";
+        static final String L = "L";
 
-        static final String DIZZY = "dizzy";
-        static final String COLD = "cold";
-        static final String NORMAL = "normal";
+        static final String A = "A";
+        static final String C = "C";
+        static final String G = "G";
+        static final String T = "T";
 
     public static void main(String[] args)
     {
-        String[] states = new String[] {HEALTHY, FEVER};
+        String[] states = new String[] {H, L};
 
-        String[] observations = new String[] {NORMAL, COLD, DIZZY};
+        String[] observations = new String[] {G, G, C, A, C, T, G, A, A};
 
         HashMap<String, Float> start_probability = new HashMap<String, Float>();
-        start_probability.put(HEALTHY, 0.6f);
-        start_probability.put(FEVER, 0.4f);
+        start_probability.put(H, 0.5f);
+        start_probability.put(L, 0.5f);
 
         // transition_probability
         HashMap<String, HashMap<String, Float>> transition_probability =
                 new HashMap<String, HashMap<String, Float>>();
         HashMap<String, Float> t1 = new HashMap<String, Float>();
-        t1.put(HEALTHY, 0.7f);
-        t1.put(FEVER, 0.3f);
+        t1.put(H, 0.5f);
+        t1.put(L, 0.5f);
         HashMap<String, Float> t2 = new HashMap<String, Float>();
-        t2.put(HEALTHY, 0.4f);
-        t2.put(FEVER, 0.6f);
-        transition_probability.put(HEALTHY, t1);
-        transition_probability.put(FEVER, t2);
+        t2.put(H, 0.4f);
+        t2.put(L, 0.6f);
+        transition_probability.put(H, t1);
+        transition_probability.put(L, t2);
 
         // emission_probability
         HashMap<String, HashMap<String, Float>> emission_probability =
                 new HashMap<String, HashMap<String, Float>>();
         HashMap<String, Float> e1 = new HashMap<String, Float>();
-        e1.put(DIZZY, 0.1f);
-        e1.put(COLD, 0.4f);
-        e1.put(NORMAL, 0.5f);
+        e1.put(A, 0.2f);
+        e1.put(C, 0.3f);
+        e1.put(G, 0.3f);
+        e1.put(T, 0.2f);
         HashMap<String, Float> e2 = new HashMap<String, Float>();
-        e2.put(DIZZY, 0.6f);
-        e2.put(COLD, 0.3f);
-        e2.put(NORMAL, 0.1f);
-        emission_probability.put(HEALTHY, e1);
-        emission_probability.put(FEVER, e2);
+        e2.put(A, 0.3f);
+        e2.put(C, 0.2f);
+        e2.put(G, 0.2f);
+        e2.put(T, 0.3f);
+        emission_probability.put(H, e1);
+        emission_probability.put(L, e2);
 
-        ArrayList<String> a = forwardViterbiForBigrams(observations,
+        ArrayList<String> a = forwardViterbiForBigrams_Test(observations,
                 states,
                 start_probability,
                 transition_probability,
                 emission_probability);
+        System.out.println("");
     }
 
-    /*
+
    public static ArrayList<String> forwardViterbiForBigrams_Test(String[] obs, String[] states,
                                                             HashMap<String, Float> start_p,
                                                             HashMap<String, HashMap<String, Float>> trans_p,
                                                             HashMap<String, HashMap<String, Float>> emit_p) {
         ArrayList<String> statesList = new ArrayList<>();
-        Hashtable<String, Object[]> T = new Hashtable<String, Object[]>();
+        HashMap<String, Object[]> T = new HashMap<String, Object[]>();
         for (String state : states)
             T.put(state, new Object[] {start_p.get(state), state, start_p.get(state)});
 
         for (String output : obs)
         {
-            Hashtable<String, Object[]> U = new Hashtable<String, Object[]>();
+            HashMap<String, Object[]> U = new HashMap<String, Object[]>();
             for (String next_state : states)
             {
                 float total = 0;
@@ -134,7 +138,7 @@ public class Viterbi
         }
         return statesList;
    }
-*/
+
     public static ArrayList<String> forwardViterbiForBigrams(String[] obs, String[] states,
                                                              HashMap<String, Float> start_p,
                                                              HashMap<String, HashMap<String, Float>> trans_p,
