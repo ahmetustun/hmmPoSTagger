@@ -18,7 +18,7 @@ public class Tagger {
 
     public static void main(String[] args) {
 
-        Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/hasimsak_train_ig");
+        Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/metusabancı_train_ig");
         trainer.analyse(3);
 
         HashMap<String, Float> my_start_count = trainer.getStartCountMap();
@@ -27,7 +27,7 @@ public class Tagger {
         HashMap<String, HashMap<String, Float>> my_transmission_pair_count = trainer.getBigramTransmissionPairMap();
         HashMap<String, HashMap<String, Float>> my_emission_pair_count = trainer.getEmissionPairMap();
         HashMap<String, Float> my_start_prob = trainer.getStartProbabilitiesMap();
-        HashMap<String, HashMap<String, Float>> my_s_transition_prob_a = trainer.getBigramTransmissionProbabilitiesMap();
+        HashMap<String, HashMap<String, Float>> my_transition_prob = trainer.getBigramTransmissionProbabilitiesMap();
         HashMap<String, HashMap<String, Float>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
         HashMap<Trigram<String, String, String>, Float> my_trigram = trainer.getTrigramCountMap();
 
@@ -36,7 +36,7 @@ public class Tagger {
         HashMap<Bigram<String, String>, HashMap<String, Float>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
 
-        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/hasimsak_test_ig", my_POS_tag_count, my_bigramCountMap, my_transmission_pair_count,
+        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/metusabancı_test_ig", my_POS_tag_count, my_bigramCountMap, my_transition_prob,
                 my_obs_count, my_trigramTransmissionPairMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
         //smoother.addOne(3);
@@ -71,12 +71,11 @@ public class Tagger {
 
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_i,  my_s_emission_prob_kn);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams_(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_i,  my_s_emission_prob_kn);
             generated_sentences_Tags.add(generatedTags);
         }
 
-
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/hasimsak_tagged_test_ig", generated_sentences_Tags);
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/metusabancı_tagged_test_ig", generated_sentences_Tags);
         float my_score = scorer.getScore();
 
         System.out.println("\n" + my_score);
