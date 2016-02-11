@@ -18,7 +18,7 @@ public class Tagger {
 
     public static void main(String[] args) {
 
-        Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/train_middle_metu_ink");
+        Trainer trainer = new Trainer(System.getProperty("user.dir")+"/datas/hasimsak_train_ig");
         trainer.analyse(3);
 
         HashMap<String, Float> my_start_count = trainer.getStartCountMap();
@@ -36,7 +36,7 @@ public class Tagger {
         HashMap<Bigram<String, String>, HashMap<String, Float>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
 
-        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/test_middle_metu_ink", my_POS_tag_count, my_bigramCountMap, my_transmission_pair_count,
+        Smoother smoother = new Smoother(System.getProperty("user.dir")+"/datas/hasimsak_test_ig", my_POS_tag_count, my_bigramCountMap, my_transmission_pair_count,
                 my_obs_count, my_trigramTransmissionPairMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
         //smoother.addOne(3);
@@ -61,22 +61,22 @@ public class Tagger {
         ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
         ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
 
-
+/*
         for (ArrayList<String> a : my_unt_sentences_suffixes){
             String[] obs = a.toArray(new String[0]);
             ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_i, my_s_trigramProbabilityMap_i,  my_s_emission_prob_kn);
             generated_sentences_Tags.add(generatedTags);
         }
-
-/*
-        for (ArrayList<String> a : my_unt_sentences_suffixes){
-            String[] obs = a.toArray(new String[0]);
-            ArrayList<String> generatedTags = Viterbi.forwardViterbiForTrigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_transmission_prob, my_s_trigramProbabilityMap,  my_s_emission_prob);
-            generated_sentences_Tags.add(generatedTags);
-        }
 */
 
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/tagged_test_middle_metu_ink", generated_sentences_Tags);
+        for (ArrayList<String> a : my_unt_sentences_suffixes){
+            String[] obs = a.toArray(new String[0]);
+            ArrayList<String> generatedTags = Viterbi.forwardViterbiForBigrams(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_i,  my_s_emission_prob_kn);
+            generated_sentences_Tags.add(generatedTags);
+        }
+
+
+        Scorer scorer = new Scorer(System.getProperty("user.dir")+"/datas/hasimsak_tagged_test_ig", generated_sentences_Tags);
         float my_score = scorer.getScore();
 
         System.out.println("\n" + my_score);

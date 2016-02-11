@@ -7,6 +7,7 @@ import utils.Bigram;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Viterbi
 {
@@ -56,7 +57,7 @@ public class Viterbi
         emission_probability.put(H, e1);
         emission_probability.put(L, e2);
 
-        ArrayList<String> a = forwardViterbiForBigrams_Test(observations,
+        ArrayList<String> a = forwardViterbiForBigrams(observations,
                 states,
                 start_probability,
                 transition_probability,
@@ -65,7 +66,7 @@ public class Viterbi
     }
 
 
-   public static ArrayList<String> forwardViterbiForBigrams_Test(String[] obs, String[] states,
+   public static ArrayList<String> forwardViterbiForBigrams(String[] obs, String[] states,
                                                             HashMap<String, Float> start_p,
                                                             HashMap<String, HashMap<String, Float>> trans_p,
                                                             HashMap<String, HashMap<String, Float>> emit_p) {
@@ -101,7 +102,7 @@ public class Viterbi
                     total += prob;
                     if (v_prob > valmax)
                     {
-                        argmax = v_path + "," + next_state;
+                       argmax = v_path + "," + next_state;
                         valmax = v_prob;
                     }
                 }
@@ -139,13 +140,38 @@ public class Viterbi
         return statesList;
    }
 
-    public static ArrayList<String> forwardViterbiForBigrams(String[] obs, String[] states,
+/*
+    public static ArrayList<String> forwardViterbiForTrigrams_Test(String[] obs, String[] states,
+                                                              HashMap<String, Float> start_p,
+                                                              HashMap<String, HashMap<String, Float>> bigram_trans_p, HashMap<Bigram<String, String>, HashMap<String, Float>> trigram_trans_p,
+                                                              HashMap<String, HashMap<String, Float>> emit_p) {
+
+        ArrayList<String> statesList = new ArrayList<>();
+        String[] firstTwo = new String[]{obs[0], obs[1]};
+        ArrayList<String> firstTwoTags = forwardViterbiForBigrams(firstTwo, states, start_p, bigram_trans_p, emit_p);
+
+        for (String s : firstTwoTags){
+            statesList.add(s);
+        }
+
+        String first = firstTwoTags.get(0);
+        String second = firstTwoTags.get(1);
+
+        Bigram<String, String> startingTwo = new Bigram(first, second);
+
+        HashMap<String, Object[]> T = new HashMap<>();
+
+
+    }
+*/
+
+    public static ArrayList<String> forwardViterbiForBigrams_(String[] obs, String[] states,
                                                              HashMap<String, Float> start_p,
                                                              HashMap<String, HashMap<String, Float>> trans_p,
                                                              HashMap<String, HashMap<String, Float>> emit_p){
         ArrayList<String> statesList = new ArrayList<>();
 
-        String first = "Noun";
+        String first = "";
         float max_p = 0f;
         for (String next : states){
             HashMap<String, Float> e_m = emit_p.get(next);
@@ -164,7 +190,7 @@ public class Viterbi
         statesList.add(first);
 
         String curr = first;
-        String next_tag = "Noun";
+        String next_tag = "";
         for (int i=1; i<obs.length; i++){
 
             float max_prob = 0f;
@@ -212,7 +238,7 @@ public class Viterbi
            Bigram<String, String> bigram = new Bigram<>(first, second);
 
            float max_p = 0f;
-           String next_tag = "Noun";
+           String next_tag = "";
            for (String next : states){
                HashMap<String, Float> e_m = emit_p.get(next);
                float e = e_m.get(obs[i]);
@@ -222,7 +248,9 @@ public class Viterbi
 
                float curr_p = e * t;
 
-               if (curr_p > max_p){
+               if (curr_p == max_p){
+                   System.out.println("ERROR");
+               } else if (curr_p > max_p){
                    max_p = curr_p;
                    next_tag = next;
                }
