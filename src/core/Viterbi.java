@@ -72,7 +72,8 @@ public class Viterbi
                                                             HashMap<String, HashMap<String, Double>> trans_p,
                                                             HashMap<String, HashMap<String, Double>> emit_p) {
         ArrayList<String> statesList = new ArrayList<>();
-        HashMap<String, Object[]> T = new HashMap<String, Object[]>();
+
+       HashMap<String, Object[]> T = new HashMap<String, Object[]>();
         for (String state : states)
             T.put(state, new Object[] {start_p.get(state), state, start_p.get(state)});
 
@@ -139,6 +140,50 @@ public class Viterbi
             statesList.add(sList[i]);
         }
         return statesList;
+   }
+
+
+   public ArrayList<String> forwardViterbiForTrigram(String[] obs, String[] states,
+                                                     HashMap<String, Double> start_p,
+                                                     HashMap<String, HashMap<String, Double>> bigram_trans_p, HashMap<Bigram<String, String>, HashMap<String, Double>> trigram_trans_p,
+                                                     HashMap<String, HashMap<String, Double>> emit_p) {
+
+       ArrayList<String> stateList = new ArrayList<>();
+
+       HashMap<String, Object[]> T = new HashMap<>();
+       for (String state : states)
+           T.put(state, new Object[] {1.0, state, 1.0});
+
+       for (int i=2; i<obs.length; i++){
+
+           HashMap<String, Object[]> U = new HashMap<String, Object[]>();
+           for (String t3_states : states){
+
+               for (String t2_states : states){
+
+                   double total = 0;
+                   String argmax = "";
+                   double valmax = 0;
+
+                   double prob = 1;
+                   String v_path = "";
+                   double v_prob = 1;
+
+                   for (String t1_states : states) {
+
+                       Object[] objs = T.get(t1_states);
+                       prob = ((double) objs[0]);
+                       v_path = (String) objs[1];
+                       v_prob = ((double) objs[2]);
+
+                       double p = emit_p.get(source_state).get(output) *
+                               trans_p.get(source_state).get(next_state);
+
+                   }
+               }
+           }
+       }
+
    }
 
 /*
@@ -218,7 +263,7 @@ public class Viterbi
         return statesList;
     }
 
-   public static ArrayList<String> forwardViterbiForTrigrams(String[] obs, String[] states,
+   public static ArrayList<String> forwardViterbiForTrigrams_(String[] obs, String[] states,
                                                              HashMap<String, Double> start_p,
                                                              HashMap<String, HashMap<String, Double>> bigram_trans_p, HashMap<Bigram<String, String>, HashMap<String, Double>> trigram_trans_p,
                                                              HashMap<String, HashMap<String, Double>> emit_p) {
