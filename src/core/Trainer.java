@@ -109,19 +109,12 @@ public class Trainer {
         return trigramTransmissionProbabilityMap;
     }
 
-    public void countBigramTransmissionPair(String sentence) {
-
+    public void countTagsAndStartingOnes(String sentence) {
         String[] words = sentence.split(Parse.boşluk_a);
-
         String prev = "START";
         for (String s : words) {
             String[] word_tag_pair = s.split(Parse.tag_a);
-            String tag = "";
-            if (word_tag_pair.length < 2){
-                tag = "Noun";
-            } else {
-                tag = word_tag_pair[1];
-            }
+            String tag = word_tag_pair[1];
 
             if (tagCountMap.containsKey(tag)) {
 
@@ -138,7 +131,35 @@ public class Trainer {
                 } else {
                     startCountMap.put(tag, 1d);
                 }
+            }
+            prev = tag;
+        }
+    }
+
+    public void countBigramTransmissionPair(String sentence) {
+
+        String[] words = sentence.split(Parse.boşluk_a);
+
+        String prev = "START";
+        for (String s : words) {
+            String[] word_tag_pair = s.split(Parse.tag_a);
+            String tag = "";
+            if (word_tag_pair.length < 2){
+                tag = "Noun";
             } else {
+                tag = word_tag_pair[1];
+            }
+
+            if (!prev.equals("START")) {
+
+                Bigram<String, String> bigram = new Bigram<>(prev, tag);
+                if (bigramCountMap.containsKey(bigram)) {
+                    double c = bigramCountMap.get(bigram) + 1d;
+                    bigramCountMap.put(bigram, c);
+                } else {
+                    bigramCountMap.put(bigram, 1d);
+                }
+
                 if (bigramTransmissionPairMap.containsKey(prev)) {
                     HashMap<String, Double> tag_num = bigramTransmissionPairMap.get(prev);
                     if (tag_num.containsKey(tag)) {
@@ -165,37 +186,13 @@ public class Trainer {
         String second = "START";
         for (String s : words) {
             String[] word_tag_pair = s.split(Parse.tag_a);
-            String tag = "";
-            if (word_tag_pair.length < 2){
-                tag = "Noun";
-            } else {
-                tag = word_tag_pair[1];
-            }
-
-            if (tagCountMap.containsKey(tag)) {
-                double n = tagCountMap.get(tag) + 1d;
-                tagCountMap.put(tag, n);
-            } else {
-                tagCountMap.put(tag, 1d);
-            }
+            String tag = word_tag_pair[1];
 
             if (first.equals("START")) {
-                if (startCountMap.containsKey(tag)) {
-                    double n = startCountMap.get(tag) + 1d;
-                    startCountMap.put(tag, n);
-                } else {
-                    startCountMap.put(tag, 1d);
-                }
-            } else if (!second.equals("START")) {
+
+            } else if (!second.equals("START") && !first.equals("START")) {
 
                 Bigram<String, String> bigram = new Bigram<>(first, second);
-                if (bigramCountMap.containsKey(bigram)) {
-                    double c = bigramCountMap.get(bigram) + 1d;
-                    bigramCountMap.put(bigram, c);
-                } else {
-                    bigramCountMap.put(bigram, 1d);
-                }
-
                 Trigram trigram = new Trigram(first, second, tag);
                 if (trigramCountMap.containsKey(trigram)) {
                     double nu = trigramCountMap.get(trigram) + 1d;
@@ -232,12 +229,7 @@ public class Trainer {
             String[] word_tag_pair = s.split(Parse.tag_a);
             String[] root_suffixes = word_tag_pair[0].split(Parse.ek_a);
 
-            String tag = "";
-            if (word_tag_pair.length < 2){
-                tag = "Noun";
-            } else {
-                tag = word_tag_pair[1];
-            }
+            String tag = word_tag_pair[1];
 
             String suffix = root_suffixes[root_suffixes.length - 1];
 
@@ -292,6 +284,11 @@ public class Trainer {
                 for (String t : PartOfSpeech.tag_list){
                     if (transmitteds.containsKey(t)){
                         t_prob.put(t, (double)transmitteds.get(t)/ tagCountMap.get(s));
+
+                        if (((double)transmitteds.get(t)/ tagCountMap.get(s)) > 1){
+                            System.out.println("  ");
+                        }
+
                     } else {
                         t_prob.put(t, 0d);
                     }
@@ -317,6 +314,11 @@ public class Trainer {
                     for (String t : PartOfSpeech.tag_list){
                         if (transmitteds.containsKey(t)){
                             t_prob.put(t, (double)transmitteds.get(t)/ bigramCountMap.get(bigram));
+
+                            if (((double)transmitteds.get(t)/ bigramCountMap.get(bigram)) > 1 ){
+                                System.out.println("Error");
+                            }
+
                         } else {
                             t_prob.put(t, 0d);
                         }
@@ -344,6 +346,11 @@ public class Trainer {
                     String obs = (String)it.next();
                     if (emitteds.containsKey(obs)){
                         e_prob.put(obs, (double)emitteds.get(obs)/ tagCountMap.get(s));
+
+                        if (((double)emitteds.get(obs)/ tagCountMap.get(s)) > 1){
+                            System.out.println();
+                        }
+
                     } else {
                         e_prob.put(obs, 0d);
                     }
@@ -374,6 +381,7 @@ public class Trainer {
             }
             case 3:{
                 for (String sentence : sentences){
+                    countTagsAndStartingOnes(sentence);
                     countEmissionPair(sentence);
                     countBigramTransmissionPair(sentence);
                     countTrigramTransmissionPair(sentence);

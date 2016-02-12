@@ -35,6 +35,7 @@ public class Smoother {
     private HashMap<String, HashMap<String, Double>> laplace_emissionProbabilitiesMap = new HashMap<>();
 
     private HashMap<Bigram<String, String>, HashMap<String, Double>> uns_trigramTransmissionPairMap = new HashMap<>();
+    private HashMap<Bigram<String, String>, HashMap<String, Double>> uns_trigramTransmissionProbabilitiesMap = new HashMap<>();
 
     private HashMap<Bigram<String, String>, HashMap<String, Double>> laplace_trigramTransmissionPairMap = new HashMap<>();
     private HashMap<Bigram<String, String>, HashMap<String, Double>> laplace_trigramTransmissionProbabilityMap = new HashMap<>();
@@ -52,7 +53,7 @@ public class Smoother {
     double kneserNey_D_bigram = 0.6f;
     double kneserNey_D_trigram = 0.6f;
     double additiveNumber = 0.4f;
-    double interpolationBeta = 0.2f;
+    double interpolationBeta = 0.8f;
 
     public Smoother(HashMap<String, Double> uns_tagCountMap, HashMap<String, Double> uns_suffixCountMap, HashMap<String, HashMap<String, Double>> uns_bigramTransmissionProbabilitiesMap,
                     HashMap<String, HashMap<String, Double>> emissionProbabilitiesMap, HashMap<String, HashMap<String, Double>> uns_emissionPairMap){
@@ -79,9 +80,11 @@ public class Smoother {
 
     public Smoother(HashMap<String, Double> uns_tagCountMap, HashMap<Bigram<String, String>, Double> uns_bigramCountMap, HashMap<String, HashMap<String, Double>> uns_bigramTransmissionProbabilitiesMap,
                     HashMap<String, Integer> uns_suffixCountMap, HashMap<Bigram<String, String>, HashMap<String, Double>> uns_trigramTransmissionPairMap, HashMap<Trigram, Double> uns_trigramCountMap,
+                    HashMap<Bigram<String, String>, HashMap<String, Double>> uns_trigramTransmissionProbabilitiesMap,
                     HashMap<String, HashMap<String, Double>> emissionProbabilitiesMap, HashMap<String, HashMap<String, Double>> uns_emissionPairMap){
 
         this.uns_trigramTransmissionPairMap = (HashMap<Bigram<String, String>, HashMap<String, Double>>) uns_trigramTransmissionPairMap.clone();
+        this.uns_trigramTransmissionProbabilitiesMap = (HashMap<Bigram<String, String>, HashMap<String, Double>>) uns_trigramTransmissionProbabilitiesMap.clone();
         this.uns_emissionPairMap = (HashMap<String, HashMap<String, Double>>) uns_emissionPairMap.clone();
         this.uns_tagCountMap = (HashMap<String, Double>) uns_tagCountMap.clone();
         this.uns_bigramCountMap = (HashMap<Bigram<String, String>, Double>) uns_bigramCountMap.clone();
@@ -93,11 +96,12 @@ public class Smoother {
     }
 
     public Smoother(String fileName, HashMap<String, Double> uns_tagCountMap, HashMap<Bigram<String, String>, Double> uns_bigramCountMap, HashMap<String, HashMap<String, Double>> uns_bigramTransmissionProbabilitiesMap,
-                    HashMap<String, Double> uns_suffixCountMap, HashMap<Bigram<String, String>, HashMap<String, Double>> uns_trigramTransmissionPairMap,
+                    HashMap<String, Double> uns_suffixCountMap, HashMap<Bigram<String, String>, HashMap<String, Double>> uns_trigramTransmissionPairMap, HashMap<Bigram<String, String>, HashMap<String, Double>> uns_trigramTransmissionProbabilitiesMap,
                     HashMap<Trigram<String, String, String>, Double> uns_trigramCountMap,
                     HashMap<String, HashMap<String, Double>> emissionProbabilitiesMap, HashMap<String, HashMap<String, Double>> uns_emissionPairMap){
 
         this.uns_trigramTransmissionPairMap = (HashMap<Bigram<String, String>, HashMap<String, Double>>) uns_trigramTransmissionPairMap.clone();
+        this.uns_trigramTransmissionProbabilitiesMap = (HashMap<Bigram<String, String>, HashMap<String, Double>>) uns_trigramTransmissionProbabilitiesMap.clone();
         this.uns_emissionPairMap = (HashMap<String, HashMap<String, Double>>) uns_emissionPairMap.clone();
         this.uns_tagCountMap = (HashMap<String, Double>) uns_tagCountMap.clone();
         this.uns_bigramCountMap = (HashMap<Bigram<String, String>, Double>) uns_bigramCountMap.clone();
@@ -310,7 +314,7 @@ public class Smoother {
         //calculateKneserNey_bigramTransmissionProbabilities();
         //calculateKneserNey_trigramTransmissionProbabilities();
         interpolationForBiagram();
-        interpolationForTrigram();
+        interpolationForTrigram_2();
     }
 
     public void interpolationSmoothingForTransitionWithTagRatioEmission(){
@@ -499,6 +503,11 @@ public class Smoother {
         for (String s : PartOfSpeech.tag_list){
             if (uns_tagCountMap.containsKey(s)){
                 uns_tagProbabilitiesMap.put(s, ((double) uns_tagCountMap.get(s)/totalStartPoint));
+
+                if (((double) uns_tagCountMap.get(s)/totalStartPoint) > 1){
+                    System.out.println();
+                }
+
             } else {
                 uns_tagProbabilitiesMap.put(s, 0d);
             }
@@ -511,12 +520,22 @@ public class Smoother {
                 HashMap<String, Double> emitteds = uns_emissionProbabilitiesMap.get(s);
                 for (String unseenSuffix : unseenSuffixList){
                     emitteds.put(unseenSuffix, uns_tagProbabilitiesMap.get(s));
+
+                    if (uns_tagProbabilitiesMap.get(s) > 1){
+                        System.out.println();
+                    }
+
                 }
                 kneserNey_emissionProbabilitiesMap.put(s, emitteds);
             } else {
                 HashMap<String, Double> e_prob = new HashMap<String, Double>();
                 for (String unseenSuffix : unseenSuffixList){
                     e_prob.put(unseenSuffix, uns_tagProbabilitiesMap.get(s));
+
+                    if (uns_tagProbabilitiesMap.get(s) > 1){
+                        System.out.println();
+                    }
+
                 }
                 kneserNey_emissionProbabilitiesMap.put(s, e_prob);
             }
@@ -537,15 +556,25 @@ public class Smoother {
             }
 
             for (String s : PartOfSpeech.tag_list){
-                    HashMap<String, Double> emitteds = uns_emissionPairMap.get(s);
+                    HashMap<String, Double> emitteds = uns_emissionProbabilitiesMap.get(s);
                     HashMap<String, Double> t_prob = new HashMap<String, Double>();
                     Iterator it = laplace_suffixCountMap.keySet().iterator();
                     while (it.hasNext()){
                         String obs = (String)it.next();
                         if (emitteds.containsKey(obs)){
                             t_prob.put(obs, (interpolationBeta * emitteds.get(obs) + (1 - interpolationBeta) * ( 1 / total)));
+
+                            if ((interpolationBeta * emitteds.get(obs) + (1 - interpolationBeta) * ( 1 / total)) > 1){
+                                System.out.println();
+                            }
+
                         } else {
                             t_prob.put(obs, (1 - interpolationBeta) * ( 1 / total));
+
+                            if ((1 - interpolationBeta) * ( 1 / total) > 1){
+                                System.out.println();
+                            }
+
                         }
                         interpolation_emissionProbabilitiesMap.put(s, t_prob);
                     }
@@ -564,6 +593,11 @@ public class Smoother {
                 Bigram<String, String> bigram = new Bigram<>(s, t);
                 if (uns_bigramCountMap.containsKey(bigram)){
                     uns_bigramProbabilitiesMap.put(bigram, ((double) uns_bigramCountMap.get(bigram)/totalStartPoint));
+
+                    if (((double) uns_bigramCountMap.get(bigram)/totalStartPoint) > 1){
+                        System.out.println();
+                    }
+
                 } else {
                     uns_bigramProbabilitiesMap.put(bigram, 0d);
                 }
@@ -572,7 +606,7 @@ public class Smoother {
     }
 
     public void interpolationForBiagram(){
-        double lambda = 0.9d;
+        double lambda = 0.5d;
 
         for (String t1 : PartOfSpeech.tag_list){
             if (uns_bigramTransmissionProbabilitiesMap.containsKey(t1)){
@@ -582,8 +616,17 @@ public class Smoother {
                     double ratio = 0d;
                     if (uns_t_prob.containsKey(t2)){
                         ratio = lambda * uns_t_prob.get(t2) + (1d - lambda) * uns_tagProbabilitiesMap.get(t2);
+
+                        if (ratio > 1){
+                            System.out.println(  );
+                        }
+
                     } else {
                         ratio = lambda * uns_tagProbabilitiesMap.get(t2);
+
+                        if (ratio > 1){
+                            System.out.println(  );
+                        }
                     }
                     t_prob.put(t2, ratio);
                 }
@@ -592,6 +635,11 @@ public class Smoother {
                 HashMap<String, Double> t_prob = new HashMap<String, Double>();
                 for (String t2 : PartOfSpeech.tag_list){
                     double ratio = lambda * uns_tagProbabilitiesMap.get(t2);
+
+                    if (ratio > 1){
+                        System.out.println(  );
+                    }
+
                     t_prob.put(t2, ratio);
                 }
                 interpolation_bigramTransmissionProbabilityMap.put(t1, t_prob);
@@ -600,23 +648,33 @@ public class Smoother {
     }
 
     public void interpolationForTrigram() {
-        double lambda_1 = 0.4d;
-        double lambda_2 = 0.3d;
-        double lambda_3 = 0.3d;
+        double lambda_1 = 0.6d;
+        double lambda_2 = 0.2d;
+        double lambda_3 = 0.2d;
 
         for (String t1 : PartOfSpeech.tag_list){
             for (String t2 : PartOfSpeech.tag_list){
                 Bigram<String, String> bigram = new Bigram<>(t1, t2);
                 double biagramCount = uns_bigramCountMap.get(bigram);
                 if (biagramCount != 0) {
-                    HashMap<String, Double> uns_t_prob = uns_trigramTransmissionPairMap.get(bigram);
+                    HashMap<String, Double> uns_t_prob = uns_trigramTransmissionProbabilitiesMap.get(bigram);
                     HashMap<String, Double> t_prob = new HashMap<String, Double>();
                     for (String t3 : PartOfSpeech.tag_list){
                         double ratio = 0f;
                         if (uns_t_prob.containsKey(t3)){
                             ratio = lambda_1 * uns_t_prob.get(t3) + lambda_2 * interpolation_bigramTransmissionProbabilityMap.get(t2).get(t3) + lambda_3 * uns_tagProbabilitiesMap.get(t3);
+
+                            if (ratio > 1){
+                                System.out.println(  );
+                            }
+
                         } else {
                             ratio = lambda_2 * interpolation_bigramTransmissionProbabilityMap.get(t2).get(t3) + lambda_3 * uns_tagProbabilitiesMap.get(t3);
+
+                            if (ratio > 1){
+                                System.out.println(  );
+                            }
+
                         }
                         t_prob.put(t3, ratio);
                     }
@@ -625,6 +683,11 @@ public class Smoother {
                     HashMap<String, Double> t_prob = new HashMap<String, Double>();
                     for (String t3 : PartOfSpeech.tag_list){
                         double ratio = ratio = lambda_2 * interpolation_bigramTransmissionProbabilityMap.get(t2).get(t3) + lambda_3 * uns_tagProbabilitiesMap.get(t3);
+
+                        if (ratio > 1){
+                            System.out.println(  );
+                        }
+
                         t_prob.put(t3, ratio);
                     }
                     interpolation_trigramTransmissionProbabilityMap.put(bigram, t_prob);
@@ -643,14 +706,24 @@ public class Smoother {
                 Bigram<String, String> bigram = new Bigram<>(t1, t2);
                 double biagramCount = uns_bigramCountMap.get(bigram);
                 if (biagramCount != 0) {
-                    HashMap<String, Double> uns_t_prob = uns_trigramTransmissionPairMap.get(bigram);
+                    HashMap<String, Double> uns_t_prob = uns_trigramTransmissionProbabilitiesMap.get(bigram);
                     HashMap<String, Double> t_prob = new HashMap<String, Double>();
                     for (String t3 : PartOfSpeech.tag_list){
                         double ratio = 0f;
                         if (uns_t_prob.containsKey(t3)){
                             ratio = lambda_1 * uns_t_prob.get(t3) + lambda_2 * uns_bigramTransmissionProbabilitiesMap.get(t2).get(t3) + lambda_3 * uns_tagProbabilitiesMap.get(t3);
+
+                            if (ratio > 1){
+                                System.out.println(  );
+                            }
+
                         } else {
                             ratio = lambda_2 * interpolation_bigramTransmissionProbabilityMap.get(t2).get(t3) + lambda_3 * uns_tagProbabilitiesMap.get(t3);
+
+                            if (ratio > 1){
+                                System.out.println(  );
+                            }
+
                         }
                         t_prob.put(t3, ratio);
                     }
@@ -659,6 +732,11 @@ public class Smoother {
                     HashMap<String, Double> t_prob = new HashMap<String, Double>();
                     for (String t3 : PartOfSpeech.tag_list){
                         double ratio = ratio = lambda_3 * uns_tagProbabilitiesMap.get(t3);
+
+                        if (ratio > 1){
+                            System.out.println(  );
+                        }
+
                         t_prob.put(t3, ratio);
                     }
                     interpolation_trigramTransmissionProbabilityMap.put(bigram, t_prob);
