@@ -309,10 +309,6 @@ public class Smoother {
 
     public void interpolationForBoth() {
         interpolationBasedEmission();
-        //calculateKneserNey_D_forBigram();
-        //calculateKneserNey_D_forTrigram();
-        //calculateKneserNey_bigramTransmissionProbabilities();
-        //calculateKneserNey_trigramTransmissionProbabilities();
         interpolationForBiagram();
         interpolationForTrigram_2();
     }
