@@ -16,8 +16,8 @@ public class Tagger {
 
     public static void main(String[] args) {
 
-        String train = "/datas/metusabancı_train_ig";
-        String test = "/datas/metusabancı_test_ig_2";
+        String train = "/datas/train_little_metu_ink";
+        String test = "/datas/test_minimal_metu_ink";
         String compare = "/datas/metusabancı_tagged_test_ig_2";
         boolean isTnT = true;
 
@@ -39,7 +39,18 @@ public class Tagger {
         HashMap<Bigram<String, String>, HashMap<String, Double>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
 
-        Smoother smoother = new Smoother(System.getProperty("user.dir")+test, my_POS_tag_count, my_bigramCountMap, my_transition_prob,
+        System.out.println("*********************** Before Smoothing ***********************");
+        Reporter.reportTagCount(my_POS_tag_count);
+        Reporter.reportTagRatio(my_POS_tag_count);
+        Reporter.reportSuffixCount(my_obs_count);
+        Reporter.reportSuffixRatio(my_obs_count);
+        Reporter.reportStartProbabilities(my_start_prob);
+        Reporter.reportBiagramTransitionProbabilities(my_transition_prob);
+        Reporter.reportTrigramTransitionProbabilities(my_trigramTransmissionProbabilityMap);
+        Reporter.reportEmissionProbabilities(my_emission_prob);
+        System.out.println("****************************************************************");
+
+        Smoother smoother = new Smoother(System.getProperty("user.dir")+test, my_POS_tag_count, my_start_prob, my_bigramCountMap, my_transition_prob,
                 my_obs_count, my_trigramTransmissionPairMap, my_trigramTransmissionProbabilityMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
         //smoother.addOne(3);
@@ -50,6 +61,7 @@ public class Tagger {
 
         ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
         HashMap<String, Double> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
+        HashMap<String, Double> my_s_start_prob = smoother.getInterpolation_startProbabilitiesMap();
         HashMap<String, HashMap<String, Double>> my_s_emission_pair_count = smoother.getLaplace_emissionPairMap();
         HashMap<String, HashMap<String, Double>> my_s_emission_prob_a = smoother.getLaplace_emissionProbabilitiesMap();
         HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_a = smoother.getLaplace_trigramTransmissionProbabilityMap();
@@ -62,6 +74,13 @@ public class Tagger {
         HashMap<String, HashMap<String, Double>> my_s_transition_prob_i = smoother.getInterpolation_bigramTransmissionProbabilityMap();
         HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_i = smoother.getInterpolation_trigramTransmissionProbabilityMap();
 
+        System.out.println("*********************** After Smoothing ***********************");
+        Reporter.reportStartProbabilities(my_s_start_prob);
+        Reporter.reportBiagramTransitionProbabilities(my_s_transition_prob_i);
+        Reporter.reportTrigramTransitionProbabilities(my_s_trigramProbabilityMap_i);
+        Reporter.reportEmissionProbabilities(my_s_emission_prob_i);
+        System.out.println("****************************************************************");
+
         ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
         ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
 
@@ -69,13 +88,13 @@ public class Tagger {
         if (!isTnT){
             for (ArrayList<String> a : my_unt_sentences_suffixes){
                 String[] obs = a.toArray(new String[0]);
-                ArrayList<String> generatedTags = BigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_i,  my_s_emission_prob_i);
+                ArrayList<String> generatedTags = BigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_s_start_prob, my_s_transition_prob_i,  my_s_emission_prob_i);
                 generated_sentences_Tags.add(generatedTags);
             }
         } else {
             for (ArrayList<String> a : my_unt_sentences_suffixes){
                 String[] obs = a.toArray(new String[0]);
-                ArrayList<String> generatedTags = TrigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_start_prob, my_s_transition_prob_i, my_s_trigramProbabilityMap_i,  my_s_emission_prob_i);
+                ArrayList<String> generatedTags = TrigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_s_start_prob, my_s_transition_prob_i, my_s_trigramProbabilityMap_i,  my_s_emission_prob_i);
                 generated_sentences_Tags.add(generatedTags);
             }
         }
