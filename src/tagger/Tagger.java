@@ -5,6 +5,8 @@ import utils.Bigram;
 import utils.PartOfSpeech;
 import utils.Trigram;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,12 +16,13 @@ import java.util.HashMap;
 
 public class Tagger {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 
-        String train = "/datas/train_little_metu_ink";
-        String test = "/datas/test_minimal_metu_ink";
-        String compare = "/datas/metusabancı_tagged_test_ig_2";
+        String train = "/datas/yeni_boun/train_boun_morf";
+        String test = "/datas/yeni_boun/test_boun_morf";
+        String compare = "/datas/yeni_boun/compare_boun_morf";
         boolean isTnT = true;
+        boolean report = false;
 
         Trainer trainer = new Trainer(System.getProperty("user.dir")+train);
         trainer.analyse(3);
@@ -33,76 +36,99 @@ public class Tagger {
         HashMap<String, HashMap<String, Double>> my_transition_prob = trainer.getBigramTransmissionProbabilitiesMap();
         HashMap<String, HashMap<String, Double>> my_emission_prob = trainer.getEmissionProbabilitiesMap();
         HashMap<Trigram<String, String, String>, Double> my_trigram = trainer.getTrigramCountMap();
+        HashMap<Bigram<String, String>, Double> my_stopProbForTrigram = trainer.getStopProbabilityMapForTrigram();
 
         HashMap<Bigram<String, String>, Double> my_bigramCountMap = trainer.getBigramCountMap();
         HashMap<Bigram<String, String>, HashMap<String, Double>> my_trigramTransmissionPairMap = trainer.getTrigramTransmissionPairMap();
         HashMap<Bigram<String, String>, HashMap<String, Double>> my_trigramTransmissionProbabilityMap = trainer.getTrigramTransmissionProbabilityMap();
 
-
-        System.out.println("*********************** Before Smoothing ***********************");
-        Reporter.reportTagCount(my_POS_tag_count);
-        Reporter.reportTagRatio(my_POS_tag_count);
-        Reporter.reportSuffixCount(my_obs_count);
-        Reporter.reportSuffixRatio(my_obs_count);
-        Reporter.reportStartProbabilities(my_start_prob);
-        Reporter.reportBiagramTransitionProbabilities(my_transition_prob);
-        Reporter.reportTrigramTransitionProbabilities(my_trigramTransmissionProbabilityMap);
-        Reporter.reportEmissionProbabilities(my_emission_prob);
-        System.out.println("****************************************************************");
+        if (report) {
+            System.out.println("*********************** Before Smoothing ***********************");
+            Reporter.reportTagCount(my_POS_tag_count);
+            Reporter.reportTagRatio(my_POS_tag_count);
+            Reporter.reportSuffixCount(my_obs_count);
+            Reporter.reportSuffixRatio(my_obs_count);
+            Reporter.reportStartProbabilities(my_start_prob);
+            Reporter.reportStopProbabilitiesForTrigram(my_stopProbForTrigram);
+            Reporter.reportBiagramTransitionProbabilities(my_transition_prob);
+            Reporter.reportTrigramTransitionProbabilities(my_trigramTransmissionProbabilityMap);
+            Reporter.reportEmissionProbabilities(my_emission_prob);
+            System.out.println("****************************************************************");
+        }
 
         Smoother smoother = new Smoother(System.getProperty("user.dir")+test, my_POS_tag_count, my_start_prob, my_bigramCountMap, my_transition_prob,
                 my_obs_count, my_trigramTransmissionPairMap, my_trigramTransmissionProbabilityMap, my_trigram, my_emission_prob, my_emission_pair_count);
 
-        //smoother.addOne(3);
-        //smoother.kneserNeySmooothing();
-        smoother.interpolationForBoth();
-        //smoother.interpolationSmoothingForTransitionWithTagRatioEmission();
-        //smoother.tagRatioBasedEmission();
 
-        ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
-        HashMap<String, Double> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
-        HashMap<String, Double> my_s_start_prob = smoother.getInterpolation_startProbabilitiesMap();
-        HashMap<String, HashMap<String, Double>> my_s_emission_pair_count = smoother.getLaplace_emissionPairMap();
-        HashMap<String, HashMap<String, Double>> my_s_emission_prob_a = smoother.getLaplace_emissionProbabilitiesMap();
-        HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_a = smoother.getLaplace_trigramTransmissionProbabilityMap();
+        double max_score = 0d;
 
-        HashMap<String, HashMap<String, Double>> my_s_transition_prob_kn = smoother.getKneserNey_bigramTransmissionProbabilityMap();
-        HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_kn = smoother.getKneserNey_trigramTransmissionProbabilityMap();
-        HashMap<String, HashMap<String, Double>> my_s_emission_prob_kn = smoother.getKneserNey_emissionProbabilitiesMap();
-
-        HashMap<String, HashMap<String, Double>> my_s_emission_prob_i = smoother.getInterpolation_emissionProbabilitiesMap();
-        HashMap<String, HashMap<String, Double>> my_s_transition_prob_i = smoother.getInterpolation_bigramTransmissionProbabilityMap();
-        HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_i = smoother.getInterpolation_trigramTransmissionProbabilityMap();
-
-        System.out.println("*********************** After Smoothing ***********************");
-        Reporter.reportStartProbabilities(my_s_start_prob);
-        Reporter.reportBiagramTransitionProbabilities(my_s_transition_prob_i);
-        Reporter.reportTrigramTransitionProbabilities(my_s_trigramProbabilityMap_i);
-        Reporter.reportEmissionProbabilities(my_s_emission_prob_i);
-        System.out.println("****************************************************************");
-
-        ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
-        ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
+//        for (int e=1; e<10; e++){
+//            for (int s=1; s<10; s++){
+//                for (int b=1; b<10; b++){
+//                    for (int t1=1; t1<10; t1++){
 
 
-        if (!isTnT){
-            for (ArrayList<String> a : my_unt_sentences_suffixes){
-                String[] obs = a.toArray(new String[0]);
-                ArrayList<String> generatedTags = BigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_s_start_prob, my_s_transition_prob_i,  my_s_emission_prob_i);
-                generated_sentences_Tags.add(generatedTags);
-            }
-        } else {
-            for (ArrayList<String> a : my_unt_sentences_suffixes){
-                String[] obs = a.toArray(new String[0]);
-                ArrayList<String> generatedTags = TrigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_s_start_prob, my_s_transition_prob_i, my_s_trigramProbabilityMap_i,  my_s_emission_prob_i);
-                generated_sentences_Tags.add(generatedTags);
-            }
-        }
 
-        Scorer scorer = new Scorer(System.getProperty("user.dir")+compare, generated_sentences_Tags);
-        double my_score = scorer.getScore();
+                            //smoother.addOne(3);
+                            //smoother.kneserNeySmooothing();
+                            smoother.interpolationForBoth();
+                            //smoother.interpolationSmoothingForTransitionWithTagRatioEmission();
+                            //smoother.tagRatioBasedEmission();
 
-        System.out.println("\n" + my_score);
+                            ArrayList<String> my_unseen_suffix_list = smoother.getUnseenSuffixList();
+                            HashMap<String, Double> my_suffix_count_map = smoother.getLaplace_suffixCountMap();
+                            HashMap<String, Double> my_s_start_prob = smoother.getInterpolation_startProbabilitiesMap();
+                            HashMap<String, HashMap<String, Double>> my_s_emission_pair_count = smoother.getLaplace_emissionPairMap();
+                            HashMap<String, HashMap<String, Double>> my_s_emission_prob_a = smoother.getLaplace_emissionProbabilitiesMap();
+                            HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_a = smoother.getLaplace_trigramTransmissionProbabilityMap();
+
+                            HashMap<String, HashMap<String, Double>> my_s_transition_prob_kn = smoother.getKneserNey_bigramTransmissionProbabilityMap();
+                            HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_kn = smoother.getKneserNey_trigramTransmissionProbabilityMap();
+                            HashMap<String, HashMap<String, Double>> my_s_emission_prob_kn = smoother.getKneserNey_emissionProbabilitiesMap();
+
+                            HashMap<String, HashMap<String, Double>> my_s_emission_prob_i = smoother.getInterpolation_emissionProbabilitiesMap();
+                            HashMap<String, HashMap<String, Double>> my_s_transition_prob_i = smoother.getInterpolation_bigramTransmissionProbabilityMap();
+                            HashMap<Bigram<String, String>, HashMap<String, Double>> my_s_trigramProbabilityMap_i = smoother.getInterpolation_trigramTransmissionProbabilityMap();
+
+                            if (report) {
+                                System.out.println("*********************** After Smoothing ***********************");
+                                Reporter.reportStartProbabilities(my_s_start_prob);
+                                Reporter.reportBiagramTransitionProbabilities(my_s_transition_prob_i);
+                                Reporter.reportTrigramTransitionProbabilities(my_s_trigramProbabilityMap_i);
+                                Reporter.reportEmissionProbabilities(my_s_emission_prob_i);
+                                System.out.println("****************************************************************");
+                            }
+
+                            ArrayList<ArrayList<String>> my_unt_sentences_suffixes = smoother.getUnTaggedSuffixesList();
+                            ArrayList<ArrayList<String>> generated_sentences_Tags = new ArrayList<>();
+
+
+                            if (!isTnT){
+                                for (ArrayList<String> a : my_unt_sentences_suffixes){
+                                    String[] obs = a.toArray(new String[0]);
+                                    ArrayList<String> generatedTags = BigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_s_start_prob, my_s_transition_prob_i,  my_s_emission_prob_i);
+                                    generated_sentences_Tags.add(generatedTags);
+                                }
+                            } else {
+                                for (ArrayList<String> a : my_unt_sentences_suffixes){
+                                    String[] obs = a.toArray(new String[0]);
+                                    ArrayList<String> generatedTags = TrigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_s_start_prob, my_s_transition_prob_i, my_s_trigramProbabilityMap_i,  my_s_emission_prob_i);
+                                    generated_sentences_Tags.add(generatedTags);
+                                }
+                            }
+
+                            Scorer scorer = new Scorer(System.getProperty("user.dir")+compare, generated_sentences_Tags);
+                            double my_score = scorer.getScore();
+
+                            if (my_score > max_score){
+                                max_score = my_score;
+                            }
+//                    }
+//                }
+//            }
+//        }
+
+        System.out.println("\n" + max_score);
         System.out.println("Tamamlandı");
 
 

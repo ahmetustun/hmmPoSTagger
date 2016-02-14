@@ -4,6 +4,9 @@ import utils.Bigram;
 import utils.PartOfSpeech;
 import utils.TrigramViterbiKey;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringJoiner;
@@ -13,12 +16,15 @@ import java.util.StringJoiner;
  */
 public class TrigramViterbi {
 
+
+
     public static ArrayList<String> forwardViterbi(String[] obs, String[] states,
                                                    HashMap<String, Double> start_p,
                                                    HashMap<String, HashMap<String, Double>> bigram_trans_p, HashMap<Bigram<String, String>, HashMap<String, Double>> trigram_trans_p,
-                                                   HashMap<String, HashMap<String, Double>> emit_p) {
+                                                   HashMap<String, HashMap<String, Double>> emit_p) throws FileNotFoundException, UnsupportedEncodingException {
 
         HashMap<Integer, String> stateList = new HashMap<>();
+        //PrintWriter writer = new PrintWriter(System.getProperty("user.dir")+"/datas/metu/output", "UTF-8");
 
         HashMap<TrigramViterbiKey<Integer, String, String>, Double> piMap = new HashMap<>();
         HashMap<TrigramViterbiKey<Integer, String, String>, String> bpMap = new HashMap<>();
@@ -33,6 +39,7 @@ public class TrigramViterbi {
                 for (String start : states) {
                     TrigramViterbiKey<Integer, String, String> key = new TrigramViterbiKey<>(k, "*", start);
                     double curr_pi = start_p.get(start) * emit_p.get(start).get(obs[k]);
+                    //writer.println("pi("+k+",*,"+start+"): " + curr_pi);
 
                     if (start_p.get(start) > 1){
                         System.out.println();
@@ -42,7 +49,6 @@ public class TrigramViterbi {
                         System.out.println();
                     }
 
-                    //System.out.println("Iteration: " + k + " pi: " + curr_pi);
                     piMap.put(key, curr_pi);
                 }
             } else if (k == 1) {
@@ -51,6 +57,7 @@ public class TrigramViterbi {
 
                         TrigramViterbiKey<Integer, String, String> prev_key = new TrigramViterbiKey<>(k-1, "*", start_state);
                         double curr_pi = piMap.get(prev_key) * bigram_trans_p.get(start_state).get(second_state) * emit_p.get(second_state).get(obs[k]);
+                        //writer.println("pi("+k+"," +start_state+","+second_state+"): " + curr_pi);
 
                         if (piMap.get(prev_key) > 1){
                             System.out.println();
@@ -63,7 +70,6 @@ public class TrigramViterbi {
                             System.out.println();
                         }
 
-                        //System.out.println("Iteration: " + k + " pi: " + curr_pi);
                         TrigramViterbiKey<Integer, String, String> curr_key = new TrigramViterbiKey<>(k, start_state, second_state);
                         piMap.put(curr_key, curr_pi);
                     }
@@ -80,6 +86,7 @@ public class TrigramViterbi {
                             Bigram<String, String> curr = new Bigram<>(t1, t2);
                             TrigramViterbiKey<Integer, String, String> prev_key = new TrigramViterbiKey<>(k-1, t1, t2);
                             double curr_pi = piMap.get(prev_key) * trigram_trans_p.get(curr).get(t3) * emit_p.get(t3).get(obs[k]);
+                            //writer.println("........ pi("+k+"," +t2+","+t3+"): " + curr_pi + " for bp: " + t1);
 
                             if (piMap.get(prev_key) > 1){
                                 System.out.println();
@@ -100,7 +107,7 @@ public class TrigramViterbi {
                         }
 
                         TrigramViterbiKey<Integer, String, String> curr_key = new TrigramViterbiKey<>(k, t2, t3);
-                        //System.out.println("Iteration: " + k + " pi: " + max_pi);
+                        //writer.println("pi("+k+"," +t2+","+t3+"): " + max_pi + " with bp: " + argmax);
                         piMap.put(curr_key, max_pi);
                         bpMap.put(curr_key, argmax);
                     }
@@ -111,13 +118,14 @@ public class TrigramViterbi {
         double last_max = 0.0;
         String last_s = "";
         String prev_last_s = "";
+        //writer.println("============ LAST BIGRAM ===============");
         for (String prev_last : states){
             for (String last : states){
 
                 Bigram<String, String> bigram = new Bigram<>(prev_last, last);
                 TrigramViterbiKey<Integer, String, String> key = new TrigramViterbiKey<>(obs.length-2, prev_last, last);
                 double last_pi = piMap.get(key) * trigram_trans_p.get(bigram).get(PartOfSpeech.PUNC_s);
-                //System.out.println(prev_last + " " + last + " " + last_pi);
+                //writer.println("pi("+(obs.length-2)+"," +prev_last+","+last+"): " + last_pi);
                 if (last_pi > last_max){
                     last_max = last_pi;
                     last_s = last;
@@ -137,6 +145,8 @@ public class TrigramViterbi {
 
         ArrayList<String> returnList = new ArrayList<>();
         returnList.addAll(stateList.values());
+
+        //writer.close();
 
         return returnList;
     }

@@ -31,6 +31,8 @@ public class Trainer {
     private HashMap<Bigram<String, String>, HashMap<String, Double>> trigramTransmissionPairMap = new HashMap<>();
     private HashMap<Bigram<String, String>, HashMap<String, Double>> trigramTransmissionProbabilityMap = new HashMap<>();
 
+    private HashMap<Bigram<String, String>, Double> stopProbabilityMapForTrigram = new HashMap<>();
+
     public Trainer(String fileName) {
         for (String s : PartOfSpeech.tag_list){
             tagCountMap.put(s, 0d);
@@ -93,6 +95,10 @@ public class Trainer {
         return bigramTransmissionProbabilitiesMap;
     }
 
+    public HashMap<Bigram<String, String>, Double> getStopProbabilityMapForTrigram() {
+        return stopProbabilityMapForTrigram;
+    }
+
     public HashMap<String, HashMap<String, Double>> getEmissionProbabilitiesMap() {
         return emissionProbabilitiesMap;
     }
@@ -114,7 +120,11 @@ public class Trainer {
         String prev = "START";
         for (String s : words) {
             String[] word_tag_pair = s.split(Parse.tag_a);
-            String tag = word_tag_pair[1];
+            String tag = "/Noun";
+            if (word_tag_pair.length < 2){
+                System.out.println(word_tag_pair[0]);
+            } else
+                tag = word_tag_pair[1];
 
             if (tagCountMap.containsKey(tag)) {
 
@@ -186,7 +196,11 @@ public class Trainer {
         String second = "START";
         for (String s : words) {
             String[] word_tag_pair = s.split(Parse.tag_a);
-            String tag = word_tag_pair[1];
+            String tag = "/Noun";
+            if (word_tag_pair.length < 2){
+                System.out.println(word_tag_pair[0]);
+            } else
+                tag = word_tag_pair[1];
 
             if (first.equals("START")) {
 
@@ -229,7 +243,11 @@ public class Trainer {
             String[] word_tag_pair = s.split(Parse.tag_a);
             String[] root_suffixes = word_tag_pair[0].split(Parse.ek_a);
 
-            String tag = word_tag_pair[1];
+            String tag = "/Noun";
+            if (word_tag_pair.length < 2){
+                System.out.println(word_tag_pair[0]);
+            } else
+                tag = word_tag_pair[1];
 
             String suffix = root_suffixes[root_suffixes.length - 1];
 
@@ -271,6 +289,31 @@ public class Trainer {
                 startProbabilitiesMap.put(s, ((double) startCountMap.get(s)/totalStartPoint));
             } else {
                 startProbabilitiesMap.put(s, 0d);
+            }
+        }
+    }
+
+    public void calculateStopProabilitiesForTrigram(){
+        for (String t1 : PartOfSpeech.tag_list){
+            for (String t2 : PartOfSpeech.tag_list){
+                Bigram<String, String> bigram = new Bigram<>(t1, t2);
+                if (trigramTransmissionPairMap.containsKey(bigram)){
+                    HashMap<String, Double> transmitteds = trigramTransmissionPairMap.get(bigram);
+                    double ratio = 0d;
+                        if (transmitteds.containsKey(PartOfSpeech.PUNC_s)){
+                            ratio = (double)transmitteds.get(PartOfSpeech.PUNC_s)/ bigramCountMap.get(bigram);
+
+                            if (((double)transmitteds.get(PartOfSpeech.PUNC_s)/ bigramCountMap.get(bigram)) > 1 ){
+                                System.out.println("Error");
+                            }
+
+                        stopProbabilityMapForTrigram.put(bigram, ratio);
+                } else {
+                            stopProbabilityMapForTrigram.put(bigram, 0d);
+                        }
+                } else {
+                    stopProbabilityMapForTrigram.put(bigram, 0d);
+                }
             }
         }
     }
@@ -388,6 +431,7 @@ public class Trainer {
                 }
                 calculateBigramTransmissionProbability();
                 calculateTrigramTransmissionProbability();
+                //calculateStopProabilitiesForTrigram();
                 break;
             }
         }

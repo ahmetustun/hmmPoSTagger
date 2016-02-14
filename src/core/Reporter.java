@@ -59,6 +59,16 @@ public class Reporter {
         }
     }
 
+    public static void reportStopProbabilitiesForTrigram(HashMap<Bigram<String, String>, Double> stopProbForTrigram){
+        System.out.println("=================== Stop Probabilities For Trigram ====================");
+        for (String t1 : PartOfSpeech.tag_list){
+            for (String t2 : PartOfSpeech.tag_list){
+                Bigram<String, String> bigram = new Bigram<>(t1,t2);
+                System.out.println("P(STOP|"+t1+","+t2+"): " + stopProbForTrigram.get(bigram));
+            }
+        }
+    }
+
     public static void reportBiagramTransitionProbabilities(HashMap<String, HashMap<String, Double>> transition_prob) {
         System.out.println("=================== Bigram Transition Probabilities ====================");
         for (String t1 : PartOfSpeech.tag_list){

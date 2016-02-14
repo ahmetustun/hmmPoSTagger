@@ -57,7 +57,7 @@ public class Smoother {
     double kneserNey_D_bigram = 0.6f;
     double kneserNey_D_trigram = 0.6f;
     double additiveNumber = 0.4f;
-    double interpolationBeta = 0.8f;
+    double interpolationBeta = 0.9f;
 
     public Smoother(HashMap<String, Double> uns_tagCountMap, HashMap<String, Double> uns_startProbabilitiesMap, HashMap<String, Double> uns_suffixCountMap, HashMap<String, HashMap<String, Double>> uns_bigramTransmissionProbabilitiesMap,
                     HashMap<String, HashMap<String, Double>> emissionProbabilitiesMap, HashMap<String, HashMap<String, Double>> uns_emissionPairMap){
@@ -297,7 +297,9 @@ public class Smoother {
     }
 
     public void kneserNeySmooothing(){
-        tagRatioBasedEmission();
+        interpolationForStart();
+        //tagRatioBasedEmission();
+        interpolationBasedEmission();
         calculateKneserNey_D_forBigram();
         calculateKneserNey_D_forTrigram();
         calculateKneserNey_bigramTransmissionProbabilities();
@@ -553,7 +555,7 @@ public class Smoother {
 
     public void interpolationForStart() {
 
-        double lambda = 0.8d;
+        double lambda = 0.9d;
 
         for (String tag : PartOfSpeech.tag_list){
             double actual = uns_startProbabilitiesMap.get(tag);
@@ -633,7 +635,7 @@ public class Smoother {
     }
 
     public void interpolationForBiagram(){
-        double lambda = 0.8d;
+        double lambda = 0.5d;
 
         for (String t1 : PartOfSpeech.tag_list){
             if (uns_bigramTransmissionProbabilitiesMap.containsKey(t1)){
@@ -649,7 +651,7 @@ public class Smoother {
                         }
 
                     } else {
-                        ratio = lambda * uns_tagProbabilitiesMap.get(t2);
+                        ratio = (1d - lambda) * uns_tagProbabilitiesMap.get(t2);
 
                         if (ratio > 1){
                             System.out.println(  );
@@ -661,7 +663,7 @@ public class Smoother {
             } else {
                 HashMap<String, Double> t_prob = new HashMap<String, Double>();
                 for (String t2 : PartOfSpeech.tag_list){
-                    double ratio = lambda * uns_tagProbabilitiesMap.get(t2);
+                    double ratio = (1d - lambda) * uns_tagProbabilitiesMap.get(t2);
 
                     if (ratio > 1){
                         System.out.println(  );
@@ -724,9 +726,9 @@ public class Smoother {
     }
 
     public void interpolationForTrigram_2() {
-        double lambda_1 = 0.6d;
-        double lambda_2 = 0.3d;
-        double lambda_3 = 0.1d;
+        double lambda_1 = 0.2d;
+        double lambda_2 = 0.4d;
+        double lambda_3 = 0.4d;
 
         for (String t1 : PartOfSpeech.tag_list){
             for (String t2 : PartOfSpeech.tag_list){
