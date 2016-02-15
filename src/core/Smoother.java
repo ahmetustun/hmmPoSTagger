@@ -297,9 +297,9 @@ public class Smoother {
     }
 
     public void kneserNeySmooothing(){
-        interpolationForStart();
         //tagRatioBasedEmission();
         interpolationBasedEmission();
+        interpolationForStart();
         calculateKneserNey_D_forBigram();
         calculateKneserNey_D_forTrigram();
         calculateKneserNey_bigramTransmissionProbabilities();
@@ -576,6 +576,8 @@ public class Smoother {
                 String suffix = keys.next();
                 total = total + laplace_suffixCountMap.get(suffix);
             }
+
+        System.out.println(total);
 
         HashMap<String, Double> suffixRatio = new HashMap<>();
         Iterator it_2 = uns_suffixCountMap.keySet().iterator();
