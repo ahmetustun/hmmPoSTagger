@@ -18,10 +18,10 @@ public class Tagger {
 
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 
-        String train = "/datas/metu/20K_suffix";
-        String test = "/datas/metu/test_suffix";
-        String compare = "/datas/metu/compare_suffix";
-        boolean isTnT = false;
+        String train = "/datas/suffix_based_comparison/ms_5k_tagger.txt";
+        String test = "/datas/suffix_based_comparison/ms_1k_test";
+        String compare = "/datas/suffix_based_comparison/ms_1k_compare_tagger.txt";
+        boolean isTnT = true;
         boolean report = false;
 
         Trainer trainer = new Trainer(System.getProperty("user.dir")+train);
@@ -70,8 +70,8 @@ public class Tagger {
 
 
                             //smoother.addOne(3);
-                            //smoother.kneserNeySmooothing();
-                            smoother.interpolationForBoth();
+                            smoother.kneserNeySmooothing();
+                            //smoother.interpolationForBoth();
                             //smoother.interpolationSmoothingForTransitionWithTagRatioEmission();
                             //smoother.tagRatioBasedEmission();
 
@@ -112,7 +112,7 @@ public class Tagger {
                             } else {
                                 for (ArrayList<String> a : my_unt_sentences_suffixes){
                                     String[] obs = a.toArray(new String[0]);
-                                    ArrayList<String> generatedTags = TrigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_s_start_prob, my_s_transition_prob_i, my_s_trigramProbabilityMap_i,  my_s_emission_prob_i);
+                                    ArrayList<String> generatedTags = TrigramViterbi.forwardViterbi(obs, PartOfSpeech.tag_list, my_s_start_prob, my_s_transition_prob_kn, my_s_trigramProbabilityMap_kn,  my_s_emission_prob_i);
                                     generated_sentences_Tags.add(generatedTags);
                                 }
                             }
