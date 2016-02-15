@@ -18,10 +18,10 @@ public class Tagger {
 
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 
-        String train = "/datas/suffix_based_comparison/100k_suffixGroup.txt";
-        String test = "/datas/suffix_based_comparison/1k_test_suffixGroup";
-        String compare = "/datas/suffix_based_comparison/1k_compare_suffixGroup";
-        boolean isTnT = false;
+        String train = "/datas/yeni_boun/5K_train_boun_ig";
+        String test = "/datas/yeni_boun/test_boun_ig";
+        String compare = "/datas/yeni_boun/compare_boun_ig";
+        boolean isTnT = true;
         boolean report = false;
 
         Trainer trainer = new Trainer(System.getProperty("user.dir")+train);

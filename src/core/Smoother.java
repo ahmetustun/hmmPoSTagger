@@ -57,7 +57,7 @@ public class Smoother {
     double kneserNey_D_bigram = 0.6f;
     double kneserNey_D_trigram = 0.6f;
     double additiveNumber = 0.4f;
-    double interpolationBeta = 0.9f;
+    double interpolationBeta = 0.999f;
 
     public Smoother(HashMap<String, Double> uns_tagCountMap, HashMap<String, Double> uns_startProbabilitiesMap, HashMap<String, Double> uns_suffixCountMap, HashMap<String, HashMap<String, Double>> uns_bigramTransmissionProbabilitiesMap,
                     HashMap<String, HashMap<String, Double>> emissionProbabilitiesMap, HashMap<String, HashMap<String, Double>> uns_emissionPairMap){
@@ -555,7 +555,7 @@ public class Smoother {
 
     public void interpolationForStart() {
 
-        double lambda = 0.9d;
+        double lambda = 0.99d;
 
         for (String tag : PartOfSpeech.tag_list){
             double actual = uns_startProbabilitiesMap.get(tag);
@@ -637,7 +637,7 @@ public class Smoother {
     }
 
     public void interpolationForBiagram(){
-        double lambda = 0.5d;
+        double lambda = 0.8d;
 
         for (String t1 : PartOfSpeech.tag_list){
             if (uns_bigramTransmissionProbabilitiesMap.containsKey(t1)){
@@ -679,9 +679,9 @@ public class Smoother {
     }
 
     public void interpolationForTrigram() {
-        double lambda_1 = 0.6d;
-        double lambda_2 = 0.2d;
-        double lambda_3 = 0.2d;
+        double lambda_1 = 0.3d;
+        double lambda_2 = 0.4d;
+        double lambda_3 = 0.4d;
 
         for (String t1 : PartOfSpeech.tag_list){
             for (String t2 : PartOfSpeech.tag_list){
