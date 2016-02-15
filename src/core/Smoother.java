@@ -57,7 +57,7 @@ public class Smoother {
     double kneserNey_D_bigram = 0.6f;
     double kneserNey_D_trigram = 0.6f;
     double additiveNumber = 0.4f;
-    double interpolationBeta = 0.6f;
+    double interpolationBeta = 0.9f;
 
     public Smoother(HashMap<String, Double> uns_tagCountMap, HashMap<String, Double> uns_startProbabilitiesMap, HashMap<String, Double> uns_suffixCountMap, HashMap<String, HashMap<String, Double>> uns_bigramTransmissionProbabilitiesMap,
                     HashMap<String, HashMap<String, Double>> emissionProbabilitiesMap, HashMap<String, HashMap<String, Double>> uns_emissionPairMap){
