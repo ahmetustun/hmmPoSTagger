@@ -19,6 +19,7 @@ public class PartOfSpeech {
     public static String QUES_s = "Ques";
     //public static String Unk_s = "Unk";
     public static String Dup_s = "Dup";
+    //public static String END_s = "End";
 
     public static String[] tag_list = {ADJ_s, ADV_s, CONJ_s, DET_s, INTERJ_s, NOUN_s, NUM_s, POSTP_s, PRON_s, PUNC_s, VERB_s, QUES_s, Dup_s};
 

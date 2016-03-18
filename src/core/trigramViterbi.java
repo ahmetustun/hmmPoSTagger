@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringJoiner;
+import java.util.regex.Matcher;
 
 /**
  * Created by ahmet on 12/02/16.
@@ -38,7 +39,8 @@ public class TrigramViterbi {
             if (k == 0) {
                 for (String start : states) {
                     TrigramViterbiKey<Integer, String, String> key = new TrigramViterbiKey<>(k, "*", start);
-                    double curr_pi = start_p.get(start) * emit_p.get(start).get(obs[k]);
+                    //double curr_pi = start_p.get(start) * emit_p.get(start).get(obs[k]);
+                    double curr_pi = Math.log(start_p.get(start)) + Math.log(emit_p.get(start).get(obs[k]));
                     //writer.println("pi("+k+",*,"+start+"): " + curr_pi);
 
                     if (start_p.get(start) > 1){
@@ -56,7 +58,7 @@ public class TrigramViterbi {
                     for (String start_state : states){
 
                         TrigramViterbiKey<Integer, String, String> prev_key = new TrigramViterbiKey<>(k-1, "*", start_state);
-                        double curr_pi = piMap.get(prev_key) * bigram_trans_p.get(start_state).get(second_state) * emit_p.get(second_state).get(obs[k]);
+                        double curr_pi = piMap.get(prev_key) + Math.log(bigram_trans_p.get(start_state).get(second_state)) + Math.log(emit_p.get(second_state).get(obs[k]));
                         //writer.println("pi("+k+"," +start_state+","+second_state+"): " + curr_pi);
 
                         if (piMap.get(prev_key) > 1){
@@ -78,14 +80,17 @@ public class TrigramViterbi {
                 for (String t3 : states){
                     for (String t2 : states){
 
-                        double max_pi = 0.0;
+                        double max_pi = -1*Double.MAX_VALUE;
                         String argmax = "";
 
                         for (String t1 : states){
 
                             Bigram<String, String> curr = new Bigram<>(t1, t2);
                             TrigramViterbiKey<Integer, String, String> prev_key = new TrigramViterbiKey<>(k-1, t1, t2);
-                            double curr_pi = piMap.get(prev_key) * trigram_trans_p.get(curr).get(t3) * emit_p.get(t3).get(obs[k]);
+                            double curr_pi = piMap.get(prev_key) + Math.log(trigram_trans_p.get(curr).get(t3)) + Math.log(emit_p.get(t3).get(obs[k]));
+                            /*if (curr_pi == 0){
+                                System.out.println("");
+                            }*/
                             //writer.println("........ pi("+k+"," +t2+","+t3+"): " + curr_pi + " for bp: " + t1);
 
                             if (piMap.get(prev_key) > 1){
@@ -115,7 +120,9 @@ public class TrigramViterbi {
             }
         }
 
-        double last_max = 0.0;
+/*
+        //double last_max = 0.0;
+        double last_max = -1*Double.MAX_VALUE;
         String last_s = "";
         String prev_last_s = "";
         //writer.println("============ LAST BIGRAM ===============");
@@ -124,7 +131,7 @@ public class TrigramViterbi {
 
                 Bigram<String, String> bigram = new Bigram<>(prev_last, last);
                 TrigramViterbiKey<Integer, String, String> key = new TrigramViterbiKey<>(obs.length-2, prev_last, last);
-                double last_pi = piMap.get(key) * trigram_trans_p.get(bigram).get(PartOfSpeech.PUNC_s);
+                double last_pi = piMap.get(key) + Math.log(trigram_trans_p.get(bigram).get(PartOfSpeech.PUNC_s));
                 //writer.println("pi("+(obs.length-2)+"," +prev_last+","+last+"): " + last_pi);
                 if (last_pi > last_max){
                     last_max = last_pi;
@@ -134,9 +141,16 @@ public class TrigramViterbi {
             }
         }
 
+
         stateList.put(obs.length-1, PartOfSpeech.PUNC_s);
         stateList.put(obs.length-2, last_s);
         stateList.put(obs.length-3, prev_last_s);
+*/
+
+        stateList.put(obs.length-1, "End");
+        stateList.put(obs.length-2, PartOfSpeech.PUNC_s);
+        stateList.put(obs.length-3, PartOfSpeech.VERB_s);
+
 
         for (int k=obs.length-3; k>0; k--){
             TrigramViterbiKey<Integer, String, String> key = new TrigramViterbiKey<>(k+1, stateList.get(k), stateList.get(k+1));
