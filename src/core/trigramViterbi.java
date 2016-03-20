@@ -120,7 +120,7 @@ public class TrigramViterbi {
             }
         }
 
-/*
+
         //double last_max = 0.0;
         double last_max = -1*Double.MAX_VALUE;
         String last_s = "";
@@ -145,12 +145,16 @@ public class TrigramViterbi {
         stateList.put(obs.length-1, PartOfSpeech.PUNC_s);
         stateList.put(obs.length-2, last_s);
         stateList.put(obs.length-3, prev_last_s);
-*/
 
+/*
         stateList.put(obs.length-1, "End");
         stateList.put(obs.length-2, PartOfSpeech.PUNC_s);
         stateList.put(obs.length-3, PartOfSpeech.VERB_s);
 
+        stateList.put(obs.length-1, "Punc");
+        stateList.put(obs.length-2, PartOfSpeech.VERB_s);
+        stateList.put(obs.length-3, PartOfSpeech.NOUN_s);
+*/
 
         for (int k=obs.length-3; k>0; k--){
             TrigramViterbiKey<Integer, String, String> key = new TrigramViterbiKey<>(k+1, stateList.get(k), stateList.get(k+1));

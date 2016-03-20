@@ -23,6 +23,8 @@ public class PartOfSpeech {
 
     public static String[] tag_list = {ADJ_s, ADV_s, CONJ_s, DET_s, INTERJ_s, NOUN_s, NUM_s, POSTP_s, PRON_s, PUNC_s, VERB_s, QUES_s, Dup_s};
 
+    //public static String[] tag_list = {ADJ_s, ADV_s, CONJ_s, DET_s, INTERJ_s, NOUN_s, NUM_s, POSTP_s, PRON_s, VERB_s, QUES_s, Dup_s};
+
     //public static String[] tag_list = {ADJ_s, NOUN_s, VERB_s, PUNC_s};
 
     /*

@@ -18,9 +18,9 @@ public class Tagger {
 
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 
-        String train = "/datas/metu/5K_train_ig_with_punc";
-        String test = "/datas/metu/1K_test_ig_with_punc";
-        String compare = "/datas/metu/1K_compare_ig_with_punc";
+        String train = "/datas/metu/39K_train_ig_without_punc";
+        String test = "/datas/metu/1K_test_ig_without_punc";
+        String compare = "/datas/metu/1K_compare_ig_without_punc";
         boolean isTnT = true;
         boolean report = false;
 

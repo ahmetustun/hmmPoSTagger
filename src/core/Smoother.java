@@ -637,7 +637,7 @@ public class Smoother {
     }
 
     public void interpolationForBiagram(){
-        double lambda = 0.7d;
+        double lambda = 0.8d;
 
         for (String t1 : PartOfSpeech.tag_list){
             if (uns_bigramTransmissionProbabilitiesMap.containsKey(t1)){
